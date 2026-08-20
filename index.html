@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chevron Network | Pure Weather & Tornado Radar</title>
+    <title>Chevron Network | Pure Weather & Radar</title>
     
-    <!-- PNG Favicon Link -->
-    <link rel="icon" type="image/png" href="costume5.png">
+    <!-- Dynamic Favicon Link -->
+    <link id="dynamicFavicon" rel="icon" type="image/png" href="costume5.png">
 
     <!-- Leaflet CSS for Radar Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -32,7 +32,7 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden; /* Prevent body horizontal scroll */
+            overflow-x: hidden;
         }
 
         /* Header UI */
@@ -78,7 +78,7 @@
             box-shadow: 0 0 10px rgba(255, 42, 42, 0.5);
         }
 
-        /* Main Container - Fully Constrained No-Scroll */
+        /* Main Container */
         main {
             width: 95%;
             max-width: 1100px;
@@ -161,7 +161,7 @@
         .rain-drop { position: absolute; background: #ff2a2a; width: 3px; height: 12px; border-radius: 2px; animation: fallRain 1.2s infinite linear; }
         @keyframes fallRain { 0% { top: 0px; opacity: 1; } 100% { top: 40px; opacity: 0; } }
 
-        /* Details Grid - Fully Responsive */
+        /* Details Grid */
         .details-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
@@ -173,7 +173,7 @@
         .detail-item span { display: block; font-size: 0.8rem; color: var(--text-dim); }
         .detail-item strong { font-size: 1.1rem; }
 
-        /* Hourly Forecast Grid (No Horizontal Scroll) */
+        /* Hourly Forecast Grid */
         .hourly-container { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); 
@@ -199,12 +199,13 @@
         .saved-tags { display: flex; gap: 8px; flex-wrap: wrap; }
         .tag { background: #1f0000; border: 1px solid var(--border-red); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; }
 
-        /* Radar Map Element */
+        /* Dark Mode Radar Container */
         #map { 
             height: 500px; 
             width: 100%; 
             border-radius: 6px;
             border: 2px solid var(--border-red);
+            background-color: #0d0d11;
         }
 
         footer { margin-top: auto; padding: 20px; font-size: 0.8rem; color: var(--text-dim); }
@@ -243,7 +244,7 @@
             <div id="alertDesc" style="margin-top: 5px;">Scanning local hazards...</div>
         </div>
 
-        <!-- 1. Current Weather Panel -->
+        <!-- Current Weather Panel -->
         <div class="card">
             <div class="card-title">Current Radar Station</div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -265,7 +266,7 @@
             </div>
         </div>
 
-        <!-- 2. Radar Map (Positioned Under Weather, Above 7-Day Forecast) -->
+        <!-- Dark Mode Radar Panel -->
         <div class="card" style="padding: 15px;">
             <div class="card-title">
                 <span>Expanded Doppler Radar</span>
@@ -279,13 +280,13 @@
             <div id="map"></div>
         </div>
 
-        <!-- 3. 24-Hour Forecast Panel -->
+        <!-- 24-Hour Forecast Panel -->
         <div class="card">
             <div class="card-title">24-Hour Forecast</div>
             <div class="hourly-container" id="hourlyList"></div>
         </div>
 
-        <!-- 4. 7-Day Extended Forecast Panel -->
+        <!-- 7-Day Extended Forecast Panel -->
         <div class="card">
             <div class="card-title">7-Day Extended Forecast</div>
             <div id="dailyList"></div>
@@ -399,6 +400,29 @@
             }
         }
 
+        // Dynamically Rotates Favicon via HTML Canvas
+        function updateRotatedFavicon(degrees) {
+            const img = new Image();
+            img.src = 'costume5.png';
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 64;
+                canvas.height = 64;
+                const ctx = canvas.getContext('2d');
+
+                // Move canvas origin to center and rotate
+                ctx.translate(32, 32);
+                ctx.rotate((degrees * Math.PI) / 180);
+                ctx.drawImage(img, -32, -32, 64, 64);
+
+                // Export rotated canvas to dynamic favIcon link
+                const favLink = document.getElementById('dynamicFavicon');
+                if (favLink) {
+                    favLink.href = canvas.toDataURL('image/png');
+                }
+            };
+        }
+
         async function fetchWeatherData(lat, lon, displayName) {
             currentCoords = { lat, lon };
             currentCityName = displayName;
@@ -419,13 +443,16 @@
             document.getElementById('pressure').innerText = `${Math.round(c.surface_pressure)} hPa`;
             document.getElementById('dew').innerText = `${Math.round(c.dew_point_2m)}°C`;
 
-            // ROTATE PNG LOGO TO POINT IN WIND DIRECTION
+            // Rotate main header logo
             const logo = document.getElementById('chevronLogo');
             logo.style.transform = `rotate(${c.wind_direction_10m}deg)`;
 
+            // Rotate favicon in browser tab to match wind direction
+            updateRotatedFavicon(c.wind_direction_10m);
+
             renderAnimatedIcon(c.weather_code);
 
-            // TORNADO & SEVERE WEATHER DETECTION
+            // Severe weather warnings check
             const alertBox = document.getElementById('alertBox');
             if (data.warnings && data.warnings.length > 0) {
                 alertBox.style.display = 'block';
@@ -467,34 +494,33 @@
                     </div>`;
             }
 
-            // Reliable Doppler Radar Initialization
             initOrUpdateMap(lat, lon);
         }
 
         async function initOrUpdateMap(lat, lon) {
             if (!map) {
-                map = L.map('map').setView([lat, lon], 7);
+                map = L.map('map', {
+                    minZoom: 3,
+                    maxZoom: 12
+                }).setView([lat, lon], 7);
 
-                // High contrast Voyager base layer
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { 
-                    maxZoom: 18,
-                    attribution: '&copy; OpenStreetMap'
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { 
+                    maxZoom: 12,
+                    attribution: '&copy; OpenStreetMap &copy; CARTO'
                 }).addTo(map);
             } else {
                 map.setView([lat, lon], 7);
             }
 
-            // Update Target Location Circle Marker
             if (locationMarker) map.removeLayer(locationMarker);
             locationMarker = L.circleMarker([lat, lon], {
-                radius: 9,
+                radius: 8,
                 fillColor: "#ff2a2a",
                 color: "#ffffff",
-                weight: 3,
+                weight: 2,
                 fillOpacity: 1
             }).addTo(map);
 
-            // Fetch Live RainViewer Overlay Timestamp
             try {
                 const radarRes = await fetch('https://api.rainviewer.com/public/weather-maps.json');
                 const radarData = await radarRes.json();
@@ -504,14 +530,13 @@
                     
                     if (radarLayer) map.removeLayer(radarLayer);
 
-                    // Smooth Color Doppler Radar Overlay
                     radarLayer = L.tileLayer(`${radarData.host}${latestFrame.path}/256/{z}/{x}/{y}/2/1_1.png`, {
-                        opacity: 0.75,
-                        maxZoom: 18
+                        opacity: 0.8,
+                        maxZoom: 12
                     }).addTo(map);
                 }
             } catch (err) {
-                console.error("Radar feed initialization error:", err);
+                console.error("Radar feed error:", err);
             }
         }
     </script>
