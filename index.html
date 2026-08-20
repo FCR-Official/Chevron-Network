@@ -342,7 +342,7 @@
         .saved-tags { display: flex; gap: 8px; flex-wrap: wrap; }
         .tag { background: #1f0000; border: 1px solid var(--border-red); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; }
 
-        #map { height: 480px; width: 100%; border-radius: 6px; border: 2px solid #1c2331; background-color: #0b0e14; }
+        #map { height: 480px; width: 100%; border-radius: 4px; border: 1px solid #1c2b3e; background-color: #07101b; }
 
         /* Space Hub Card Theme */
         .space-hub-card {
@@ -537,9 +537,9 @@
             </div>
         </div>
 
-        <div class="card" id="radarCardContainer" style="padding: 15px; border-color: #24344d; background: rgba(9, 13, 20, 0.9);">
+        <div class="card" id="radarCardContainer" style="padding: 15px; border-color: #20344d; background: #07101b;">
             <div class="card-title" style="border-color: #1c2638;">
-                <span style="color: #4da6ff;">🛰️ The Weather Network &bull; HD Satellite & Radar (Dark Mode)</span>
+                <span style="color: #f4f7fb;">🛰️ The Weather Network &bull; HD Radar — Dark Mode</span>
                 <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                     <div class="radar-legend" style="background: #06090f; border-color: #192536;">
                         <div class="legend-item"><span style="color:#00ff88;">Light Rain</span></div>
@@ -643,25 +643,7 @@
 
         <div class="card space-hub-card">
             <div class="card-title" style="border-color: #3a1525; z-index: 2;">🔭 Upcoming 2026 Space Events & Eclipses</div>
-            <div style="display: flex; flex-direction: column; gap: 5px;" id="spaceEventsList">
-                <div class="event-item">
-                    <div><strong>Total Solar Eclipse</strong> — Totality visible in Spain, Greenland, Iceland; Partial in North America</div>
-                    <div class="event-date">Aug 12, 2026</div>
-                </div>
-                <div class="event-item">
-                    <div><strong>Perseid Meteor Shower Peak</strong> — One of the year's best meteor displays under dark skies</div>
-                    <div class="event-date">Aug 12-13, 2026</div>
-                </div>
-                <div class="event-item">
-                    <div><strong>Partial Lunar Eclipse (Sturgeon Moon)</strong> — Visible across the Americas, Europe, and Africa</div>
-                    <div class="event-date">Aug 27-28, 2026</div>
-                </div>
-                <div class="event-item">
-                    <div><strong>Geminid Meteor Shower Peak</strong> — The year's most reliable and brilliant meteor shower</div>
-                    <div class="event-date">Dec 13-14, 2026</div>
-                </div>
-            </div>
-        </div>
+            <div style="display: flex; flex-direction: column; gap: 5px;" id="spaceEventsList"></div>        </div>
     </main>
 
     <footer>Chevron Network &bull; Advanced Atmospheric Radar & Deep-Space Astronomy Hub</footer>
@@ -691,6 +673,7 @@
             updateCalendarMetrics();
             initStarCanvas();
             checkLiveCelestialEvents();
+            setInterval(checkLiveCelestialEvents, 60 * 1000);
 
             const savedUser = localStorage.getItem('chevron_user');
             if (savedUser) {
@@ -718,33 +701,83 @@
             }
         }
 
+        const celestialEvents = [
+            {
+                name: "Total Solar Eclipse",
+                start: "2026-08-12T00:00:00",
+                end: "2026-08-13T00:00:00",
+                description: "Totality visible in Spain, Greenland and Iceland; partial eclipse visible across parts of North America.",
+                dateLabel: "Aug 12, 2026"
+            },
+            {
+                name: "Perseid Meteor Shower Peak",
+                start: "2026-08-12T00:00:00",
+                end: "2026-08-14T00:00:00",
+                description: "One of the year's best meteor displays under dark skies.",
+                dateLabel: "Aug 12–13, 2026"
+            },
+            {
+                name: "Partial Lunar Eclipse (Sturgeon Moon)",
+                start: "2026-08-27T00:00:00",
+                end: "2026-08-29T00:00:00",
+                description: "A partial lunar eclipse visible across the Americas, Europe and Africa.",
+                dateLabel: "Aug 27–28, 2026"
+            },
+            {
+                name: "Geminid Meteor Shower Peak",
+                start: "2026-12-13T00:00:00",
+                end: "2026-12-15T00:00:00",
+                description: "The year's most reliable and brilliant meteor shower.",
+                dateLabel: "Dec 13–14, 2026"
+            }
+        ];
+
         function checkLiveCelestialEvents() {
             const now = new Date();
-            const month = now.getMonth() + 1;
-            const day = now.getDate();
+            const active = celestialEvents.find(event =>
+                now >= new Date(event.start) && now < new Date(event.end)
+            );
+
             const banner = document.getElementById('celestialAlertBanner');
             const nameEl = document.getElementById('celestialEventName');
             const descEl = document.getElementById('celestialEventDesc');
 
-            // Check for active celestial events based on current date (August 2026 active window)
-            if (month === 8 && day >= 10 && day <= 14) {
+            if (active) {
                 banner.style.display = 'flex';
-                nameEl.innerText = "Perseid Meteor Shower & Solar Alignment";
-                descEl.innerText = "Active meteor activity peaking overhead with enhanced shooting star rates under dark skies.";
-            } else if (month === 8 && day >= 26 && day <= 29) {
-                banner.style.display = 'flex';
-                nameEl.innerText = "Partial Lunar Eclipse (Sturgeon Full Moon)";
-                descEl.innerText = "Coppery shadow alignment visible across the night sky. Full moon illumination peaking tonight.";
-            } else if (month === 12 && day >= 12 && day <= 15) {
-                banner.style.display = 'flex';
-                nameEl.innerText = "Geminid Meteor Shower Peak";
-                descEl.innerText = "Intense fireballs and high meteor rates visible throughout tonight's sky.";
+                nameEl.innerText = active.name;
+                descEl.innerText = active.description;
             } else {
-                // Default active status check for demonstration
-                banner.style.display = 'flex';
-                nameEl.innerText = "Scorpius & Antares Conjunction";
-                descEl.innerText = "Waxing lunar alignment near the reddish supergiant star Antares in the southern sky tonight.";
+                banner.style.display = 'none';
             }
+
+            renderUpcomingSpaceEvents(now);
+        }
+
+        function renderUpcomingSpaceEvents(now = new Date()) {
+            const container = document.getElementById('spaceEventsList');
+            if (!container) return;
+
+            // Expired events are not rendered, so the remaining events
+            // automatically move upward with no empty space.
+            const upcoming = celestialEvents.filter(event => new Date(event.end) > now);
+
+            if (upcoming.length === 0) {
+                container.innerHTML = `
+                    <div class="event-item">
+                        <div><strong>No scheduled 2026 events remaining</strong> — Check back for the next astronomy update.</div>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = upcoming.map((event, index) => `
+                <div class="event-item">
+                    <div>
+                        <strong>${index === 0 ? 'Next Event: ' : ''}${event.name}</strong>
+                        — ${event.description}
+                    </div>
+                    <div class="event-date">${event.dateLabel}</div>
+                </div>
+            `).join('');
         }
 
         function analyzePrecipitationTiming(hourlyData) {
@@ -1437,7 +1470,7 @@
                     center: [lon, lat],
                     zoom: 6,
                     minZoom: 1,
-                    maxZoom: 19019028080
+                    maxZoom: 18
                 });
 
                 map.addControl(new maplibregl.NavigationControl(), 'top-right');
@@ -1504,7 +1537,7 @@
                     type: 'raster',
                     tiles: [radarTileUrl],
                     tileSize: 256,
-                    maxzoom: 19019028080
+                    maxzoom: 18
                 });
 
                 map.addLayer({
