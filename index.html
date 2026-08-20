@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chevron Network | Advanced Weather, Radar & Astronomy Hub</title>
+    <title>Chevron Network | Advanced Atmospheric & Celestial Observatory</title>
     
     <link id="dynamicFavicon" rel="icon" type="image/png" href="costume5.png">
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
     
     <style>
         :root {
-            --bg-dark: #07070b;
-            --card-bg: #121218;
             --accent-red: #ff2a2a;
             --border-red: #8b0000;
             --text-light: #f0f0f5;
@@ -21,7 +19,9 @@
         * { box-sizing: border-box; }
 
         body {
-            background-color: var(--bg-dark);
+            /* Dynamic Sky Background initialized to deep night / twilight */
+            background: linear-gradient(135deg, #03050b 0%, #0d1224 50%, #1a0b1c 100%);
+            background-attachment: fixed;
             color: var(--text-light);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -30,11 +30,13 @@
             align-items: center;
             min-height: 100vh;
             overflow-x: hidden;
+            transition: background 3s ease-in-out;
         }
 
         header {
             width: 100%;
-            background: linear-gradient(180deg, #2a0000 0%, var(--bg-dark) 100%);
+            background: linear-gradient(180deg, rgba(42, 0, 0, 0.85) 0%, rgba(7, 7, 11, 0.95) 100%);
+            backdrop-filter: blur(10px);
             border-bottom: 3px solid var(--accent-red);
             padding: 15px 25px;
             display: flex;
@@ -57,7 +59,6 @@
         }
 
         .logo-container { display: flex; flex-direction: column; }
-        
         .title-row { display: flex; align-items: baseline; gap: 8px; }
         h1 { margin: 0; font-size: 1.8rem; letter-spacing: 2px; text-transform: uppercase; }
         h1 span { color: var(--accent-red); }
@@ -80,10 +81,10 @@
             display: flex;
             align-items: center;
             gap: 20px;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.5);
             padding: 8px 15px;
             border-radius: 6px;
-            border: 1px solid #2a2a30;
+            border: 1px solid rgba(255,255,255,0.1);
         }
         .digital-clock-display {
             font-family: 'Courier New', Courier, monospace;
@@ -116,7 +117,7 @@
 
         .unit-toggle {
             display: flex;
-            background: var(--card-bg);
+            background: rgba(18, 18, 24, 0.8);
             border: 1px solid var(--border-red);
             border-radius: 4px;
             overflow: hidden;
@@ -134,7 +135,7 @@
         .unit-btn.active { background: var(--accent-red); color: #ffffff; }
 
         button {
-            background-color: var(--card-bg);
+            background-color: rgba(18, 18, 24, 0.8);
             color: var(--text-light);
             border: 1px solid var(--accent-red);
             padding: 10px 18px;
@@ -161,7 +162,7 @@
         input[type="text"] {
             flex: 1;
             padding: 12px 15px;
-            background: var(--card-bg);
+            background: rgba(18, 18, 24, 0.85);
             border: 1px solid var(--border-red);
             color: var(--text-light);
             border-radius: 4px;
@@ -184,11 +185,12 @@
         }
 
         .card {
-            background-color: var(--card-bg);
+            background-color: rgba(12, 12, 18, 0.82);
+            backdrop-filter: blur(12px);
             border: 1px solid var(--border-red);
             border-radius: 6px;
             padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
             width: 100%;
             position: relative;
         }
@@ -201,7 +203,7 @@
             border-radius: 0;
             display: flex;
             flex-direction: column;
-            background-color: var(--bg-dark);
+            background-color: #07070b;
             padding: 15px;
             box-sizing: border-box;
         }
@@ -214,7 +216,7 @@
             font-size: 0.9rem;
             letter-spacing: 1px;
             margin-bottom: 15px;
-            border-bottom: 1px solid #2a2a30;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             padding-bottom: 8px;
             display: flex;
             justify-content: space-between;
@@ -265,115 +267,9 @@
         .rain-drop { position: absolute; background: #ff2a2a; width: 3px; height: 12px; border-radius: 2px; animation: fallRain 1.1s infinite linear; }
         @keyframes fallRain { 0% { top: 45px; opacity: 1; } 100% { top: 68px; opacity: 0; } }
 
-        .details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #2a2a30; }
+        .details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); }
         .detail-item span { display: block; font-size: 0.8rem; color: var(--text-dim); }
         .detail-item strong { font-size: 1.1rem; }
-
-        /* Advanced Astronomy & Space Hub Theme */
-        .space-hub-card {
-            background: radial-gradient(circle at 50% 20%, #181528 0%, #0c0a14 60%, #050408 100%);
-            border: 1px solid #4a1525;
-            position: relative;
-            overflow: hidden;
-        }
-        .space-hub-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                radial-gradient(white 1px, transparent 0),
-                radial-gradient(rgba(255,42,42,0.4) 1px, transparent 0);
-            background-size: 60px 60px, 90px 90px;
-            background-position: 0 0, 30px 30px;
-            opacity: 0.35;
-            pointer-events: none;
-        }
-
-        .astro-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-            position: relative;
-            z-index: 2;
-        }
-        .astro-card {
-            background: rgba(13, 14, 18, 0.75);
-            backdrop-filter: blur(5px);
-            border: 1px solid #2d2035;
-            border-radius: 6px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .astro-card span { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
-        .astro-card strong { font-size: 1.1rem; color: #ff8888; }
-
-        /* Constellation Spotter Interactive Viewport */
-        .constellation-viewport {
-            width: 100%;
-            height: 340px;
-            background: #030205;
-            border: 1px solid #3a1a2b;
-            border-radius: 6px;
-            position: relative;
-            margin-top: 15px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 15px;
-            z-index: 2;
-        }
-        .constellation-sky-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-        .constellation-header-bar { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 3; flex-wrap: wrap; gap: 10px; }
-        .constellation-tabs { display: flex; gap: 6px; background: rgba(0,0,0,0.6); padding: 4px; border-radius: 6px; border: 1px solid #2a1a20; }
-        .const-btn { background: transparent; color: var(--text-dim); border: none; padding: 5px 10px; font-size: 0.75rem; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .const-btn.active { background: var(--accent-red); color: #fff; }
-
-        .constellation-info-overlay {
-            position: relative;
-            z-index: 3;
-            background: rgba(10, 8, 14, 0.85);
-            border: 1px solid #421c2c;
-            padding: 12px 15px;
-            border-radius: 6px;
-            max-width: 380px;
-            backdrop-filter: blur(4px);
-        }
-        .constellation-info-overlay h4 { margin: 0 0 5px 0; color: #ff6666; font-size: 0.95rem; letter-spacing: 0.5px; }
-        .constellation-info-overlay p { margin: 0; font-size: 0.8rem; color: var(--text-dim); line-height: 1.4; }
-
-        /* Stellar Temp Converter Tool Inside Astronomy Section */
-        .stellar-calc-box {
-            background: rgba(13, 14, 18, 0.85);
-            border: 1px solid #3a1a2b;
-            border-radius: 6px;
-            padding: 15px;
-            margin-top: 15px;
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .stellar-slider-row { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
-        .stellar-slider { flex: 1; accent-color: var(--accent-red); cursor: pointer; }
-
-        .event-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #2a1a20;
-            font-size: 0.9rem;
-            flex-wrap: wrap;
-            gap: 10px;
-            position: relative;
-            z-index: 2;
-        }
-        .event-date { background: #2a0000; color: #ff8888; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border-red); font-size: 0.8rem; font-weight: bold; }
 
         .hourly-scroller-controls {
             display: flex;
@@ -405,13 +301,117 @@
         .hourly-card:hover { border-color: var(--accent-red); background: rgba(255, 42, 42, 0.05); }
         .hourly-card.active-hour { border-color: var(--accent-red); background: rgba(255, 42, 42, 0.15); box-shadow: 0 0 10px rgba(255, 42, 42, 0.3); }
 
-        .daily-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #2a2a30; }
+        .daily-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .saved-tags { display: flex; gap: 8px; flex-wrap: wrap; }
         .tag { background: #1f0000; border: 1px solid var(--border-red); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; }
 
         #map { height: 480px; width: 100%; border-radius: 6px; border: 2px solid #2a2a38; background-color: #0b0e14; }
 
-        footer { margin-top: auto; padding: 20px; font-size: 0.8rem; color: var(--text-dim); }
+        /* Advanced Deep Space Observatory & Sky Hub Theme */
+        .space-hub-card {
+            background: radial-gradient(circle at 50% 20%, #181528 0%, #0c0a14 60%, #050408 100%);
+            border: 1px solid #4a1525;
+            position: relative;
+            overflow: hidden;
+        }
+        .space-hub-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(white 1px, transparent 0),
+                radial-gradient(rgba(255,42,42,0.4) 1px, transparent 0);
+            background-size: 60px 60px, 90px 90px;
+            background-position: 0 0, 30px 30px;
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        .astro-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+            position: relative;
+            z-index: 2;
+        }
+        .astro-card {
+            background: rgba(13, 14, 18, 0.85);
+            backdrop-filter: blur(5px);
+            border: 1px solid #2d2035;
+            border-radius: 6px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .astro-card span { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+        .astro-card strong { font-size: 1.1rem; color: #ff8888; }
+
+        .constellation-viewport {
+            width: 100%;
+            height: 360px;
+            background: #030205;
+            border: 1px solid #3a1a2b;
+            border-radius: 6px;
+            position: relative;
+            margin-top: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+            z-index: 2;
+        }
+        .constellation-sky-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .constellation-header-bar { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 3; flex-wrap: wrap; gap: 10px; }
+        .constellation-tabs { display: flex; gap: 6px; background: rgba(0,0,0,0.6); padding: 4px; border-radius: 6px; border: 1px solid #2a1a20; flex-wrap: wrap; }
+        .const-btn { background: transparent; color: var(--text-dim); border: none; padding: 5px 10px; font-size: 0.75rem; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .const-btn.active { background: var(--accent-red); color: #fff; }
+
+        .constellation-info-overlay {
+            position: relative;
+            z-index: 3;
+            background: rgba(10, 8, 14, 0.88);
+            border: 1px solid #421c2c;
+            padding: 12px 15px;
+            border-radius: 6px;
+            max-width: 420px;
+            backdrop-filter: blur(4px);
+        }
+        .constellation-info-overlay h4 { margin: 0 0 5px 0; color: #ff6666; font-size: 0.95rem; letter-spacing: 0.5px; }
+        .constellation-info-overlay p { margin: 0; font-size: 0.8rem; color: var(--text-dim); line-height: 1.4; }
+
+        .stellar-calc-box {
+            background: rgba(13, 14, 18, 0.88);
+            border: 1px solid #3a1a2b;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .stellar-slider-row { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .stellar-slider { flex: 1; accent-color: var(--accent-red); cursor: pointer; }
+
+        .event-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #2a1a20;
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+            gap: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        .event-date { background: #2a0000; color: #ff8888; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border-red); font-size: 0.8rem; font-weight: bold; }
+
+        footer { margin-top: auto; padding: 20px; font-size: 0.8rem; color: var(--text-dim); text-align: center; }
     </style>
 </head>
 <body>
@@ -484,33 +484,76 @@
             </div>
         </div>
 
-        <!-- Ultra-Advanced Astronomy & Space Hub Panel -->
+        <!-- Infinite Molecular Zoom Radar Map Container -->
+        <div class="card" id="radarCardContainer" style="padding: 15px;">
+            <div class="card-title">
+                <span>Infinite Vector Molecular Radar (Dark Mode • Max Zoom 19,019,028,080)</span>
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <div class="radar-legend">
+                        <div class="legend-item"><span style="color:#00ff88;">Light</span></div>
+                        <div class="legend-bar">
+                            <div style="flex:1; background:#00e676;"></div>
+                            <div style="flex:1; background:#ffeb3b;"></div>
+                            <div style="flex:1; background:#ff5722;"></div>
+                            <div style="flex:1; background:#d50000;"></div>
+                            <div style="flex:1; background:#aa00ff;"></div>
+                            <div style="flex:1; background:#00b0ff;"></div>
+                        </div>
+                        <div class="legend-item"><span style="color:#aa00ff;">Severe</span></div>
+                    </div>
+                    <button class="cloud-step-btn" onclick="toggleMapFullscreen()" id="fullscreenBtn">⛶ Fullscreen</button>
+                </div>
+            </div>
+            
+            <div id="map"></div>
+
+            <div class="hourly-scroller-controls">
+                <span class="cloud-watch-title">☁️ Full 24-Hour Cloud & Radar Timeline: <span id="selectedHourIndicator" style="color:var(--text-light); font-weight:normal;">Current Hour</span></span>
+                <div class="cloud-stepper-btns">
+                    <button class="cloud-step-btn" onclick="shiftCloudWatch(-1)">◀ Prev Hour</button>
+                    <button class="cloud-step-btn" onclick="resetToCurrentHour()">Now</button>
+                    <button class="cloud-step-btn" onclick="shiftCloudWatch(1)">Next Hour ▶</button>
+                </div>
+            </div>
+            <div class="hourly-container" id="hourlyList"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">7-Day Extended Forecast</div>
+            <div id="dailyList"></div>
+        </div>
+
+        <!-- ASTRONOMY & CONSTELLATION SPOTTER SECTION (POSITIONED AT THE VERY BOTTOM) -->
         <div class="card space-hub-card">
             <div class="card-title" style="border-color: #3a1525; z-index: 2;">
                 <span>🌌 Astronomy & Deep-Space Observatory Hub</span>
-                <span style="font-size: 0.75rem; color: #ff8888; font-weight: normal;">Advanced Stellar & Celestial Tracker</span>
+                <span style="font-size: 0.75rem; color: #ff8888; font-weight: normal;">Advanced Astrometry, Sidereal & Celestial Tracker</span>
             </div>
             
             <div class="astro-grid">
                 <div class="astro-card">
-                    <span>Moon Phase</span>
+                    <span>Moon Phase & Illumination</span>
                     <strong id="moonPhaseVal">--</strong>
+                </div>
+                <div class="astro-card">
+                    <span>Local Sidereal Time (LST)</span>
+                    <strong id="siderealTimeVal">--</strong>
+                </div>
+                <div class="astro-card">
+                    <span>Solar Elevation Angle</span>
+                    <strong id="solarElevVal">--</strong>
+                </div>
+                <div class="astro-card">
+                    <span>Twilight Stage</span>
+                    <strong id="twilightStageVal">--</strong>
                 </div>
                 <div class="astro-card">
                     <span>Sunrise / Sunset</span>
                     <strong id="sunTimesVal" style="font-size: 1rem;">-- / --</strong>
                 </div>
                 <div class="astro-card">
-                    <span>Day of Year</span>
-                    <strong id="dayOfYearVal">--</strong>
-                </div>
-                <div class="astro-card">
-                    <span>Week Number</span>
-                    <strong id="weekNumVal">--</strong>
-                </div>
-                <div class="astro-card">
-                    <span>Quarter of Year</span>
-                    <strong id="quarterVal">--</strong>
+                    <span>Calendar Metrics</span>
+                    <strong id="dayOfYearVal" style="font-size: 0.95rem;">--</strong>
                 </div>
             </div>
 
@@ -519,11 +562,12 @@
                 <canvas class="constellation-sky-canvas" id="starCanvas"></canvas>
                 
                 <div class="constellation-header-bar">
-                    <span style="font-size: 0.8rem; font-weight: bold; color: #ff8888; letter-spacing: 0.5px; text-transform: uppercase;">✨ Constellation & Celestial Spotter</span>
+                    <span style="font-size: 0.8rem; font-weight: bold; color: #ff8888; letter-spacing: 0.5px; text-transform: uppercase;">✨ Advanced Constellation & Deep-Sky Spotter</span>
                     <div class="constellation-tabs">
                         <button class="const-btn active" onclick="switchConstellation('triangle', event)">Summer Triangle</button>
                         <button class="const-btn" onclick="switchConstellation('milkyway', event)">Milky Way Core</button>
                         <button class="const-btn" onclick="switchConstellation('deepsky', event)">Deep-Sky Objects</button>
+                        <button class="const-btn" onclick="switchConstellation('zodiac', event)">Zodiacal Band</button>
                     </div>
                 </div>
 
@@ -570,52 +614,13 @@
                 </div>
             </div>
         </div>
-
-        <!-- Infinite Molecular Zoom Radar Map Container (Max Zoom 19,019,028,080) -->
-        <div class="card" id="radarCardContainer" style="padding: 15px;">
-            <div class="card-title">
-                <span>Infinite Vector Molecular Radar (Dark Mode • Max Zoom 19,019,028,080)</span>
-                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                    <div class="radar-legend">
-                        <div class="legend-item"><span style="color:#00ff88;">Light</span></div>
-                        <div class="legend-bar">
-                            <div style="flex:1; background:#00e676;"></div>
-                            <div style="flex:1; background:#ffeb3b;"></div>
-                            <div style="flex:1; background:#ff5722;"></div>
-                            <div style="flex:1; background:#d50000;"></div>
-                            <div style="flex:1; background:#aa00ff;"></div>
-                            <div style="flex:1; background:#00b0ff;"></div>
-                        </div>
-                        <div class="legend-item"><span style="color:#aa00ff;">Severe</span></div>
-                    </div>
-                    <button class="cloud-step-btn" onclick="toggleMapFullscreen()" id="fullscreenBtn">⛶ Fullscreen</button>
-                </div>
-            </div>
-            
-            <div id="map"></div>
-
-            <div class="hourly-scroller-controls">
-                <span class="cloud-watch-title">☁️ Full 24-Hour Cloud & Radar Timeline: <span id="selectedHourIndicator" style="color:var(--text-light); font-weight:normal;">Current Hour</span></span>
-                <div class="cloud-stepper-btns">
-                    <button class="cloud-step-btn" onclick="shiftCloudWatch(-1)">◀ Prev Hour</button>
-                    <button class="cloud-step-btn" onclick="resetToCurrentHour()">Now</button>
-                    <button class="cloud-step-btn" onclick="shiftCloudWatch(1)">Next Hour ▶</button>
-                </div>
-            </div>
-            <div class="hourly-container" id="hourlyList"></div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">7-Day Extended Forecast</div>
-            <div id="dailyList"></div>
-        </div>
     </main>
 
-    <footer>Chevron Network &bull; 100% Ad-Free Weather Radar & Astronomy Hub</footer>
+    <footer>Chevron Network &bull; Advanced Atmospheric Radar & Deep-Space Astronomy Hub</footer>
 
     <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
     <script>
-        let map, currentUser = null, currentCoords = null, currentCityName = "", locationMarker = null;
+        let map, currentUser = null, currentCoords = null, currentCityName = "";
         let currentUnit = 'C';
         let rawWeatherData = null;
         let activeCloudIndex = 0;
@@ -679,6 +684,36 @@
             document.getElementById('secHand').style.transform = `translate(-50%, 0) rotate(${secDeg}deg)`;
             document.getElementById('minHand').style.transform = `translate(-50%, 0) rotate(${minDeg}deg)`;
             document.getElementById('hourHand').style.transform = `translate(-50%, 0) rotate(${hourDeg}deg)`;
+
+            updateDynamicSkyBackground(hours + minutes / 60);
+        }
+
+        function updateDynamicSkyBackground(decimalHours) {
+            let bgGradient = "";
+            let solarElev = Math.sin(((decimalHours - 6) / 24) * Math.PI * 2) * 90; // Approx solar elevation model
+
+            document.getElementById('solarElevVal').innerText = `${solarElev.toFixed(1)}°`;
+
+            let twilight = "Daytime Clear";
+            if (solarElev > 6) {
+                bgGradient = "linear-gradient(135deg, #0b192c 0%, #1e3e62 50%, #000000 100%)";
+                twilight = "Full Daylight";
+            } else if (solarElev > 0 && solarElev <= 6) {
+                bgGradient = "linear-gradient(135deg, #2c122b 0%, #8b3a3a 50%, #150914 100%)";
+                twilight = "Civil Twilight";
+            } else if (solarElev > -12 && solarElev <= 0) {
+                bgGradient = "linear-gradient(135deg, #100c24 0%, #3b1b45 50%, #050208 100%)";
+                twilight = "Nautical Twilight";
+            } else if (solarElev > -18 && solarElev <= -12) {
+                bgGradient = "linear-gradient(135deg, #070614 0%, #180c2e 50%, #030206 100%)";
+                twilight = "Astronomical Twilight";
+            } else {
+                bgGradient = "linear-gradient(135deg, #020308 0%, #080b18 50%, #120516 100%)";
+                twilight = "Deep Night Sky";
+            }
+
+            document.getElementById('twilightStageVal').innerText = twilight;
+            document.body.style.background = bgGradient;
         }
 
         function updateCalendarMetrics() {
@@ -687,14 +722,19 @@
             const diff = now - start;
             const oneDay = 1000 * 60 * 60 * 24;
             const dayOfYear = Math.floor(diff / oneDay);
-            document.getElementById('dayOfYearVal').innerText = `Day ${dayOfYear} of ${now.getFullYear() % 4 === 0 ? 366 : 365}`;
+            document.getElementById('dayOfYearVal').innerText = `Day ${dayOfYear} (${now.getFullYear() % 4 === 0 ? 'Leap Yr' : 'Standard'})`;
 
             const firstDay = new Date(now.getFullYear(), 0, 1);
             const weekNumber = Math.ceil((((now - firstDay) / oneDay) + firstDay.getDay() + 1) / 7);
-            document.getElementById('weekNumVal').innerText = `Week ${weekNumber}`;
 
-            const quarter = Math.floor(now.getMonth() / 3) + 1;
-            document.getElementById('quarterVal').innerText = `Q${quarter} (${['Jan-Mar', 'Apr-Jun', 'Jul-Sep', 'Oct-Dec'][quarter - 1]})`;
+            // Compute Approximate Local Sidereal Time (LST)
+            const utHours = now.getUTCHours() + now.getUTCMinutes() / 60 + now.getUTCSeconds() / 3600;
+            const d = (now - Date.UTC(2000, 0, 1, 12, 0, 0)) / oneDay;
+            let lst = 100.46 + 0.985647 * d + 15 * utHours + (currentCoords ? currentCoords.lon : -79.2);
+            lst = (lst % 360 + 360) % 360;
+            const lstHours = Math.floor(lst / 15);
+            const lstMinutes = Math.floor((lst / 15 - lstHours) * 60);
+            document.getElementById('siderealTimeVal').innerText = `${String(lstHours).padStart(2,'0')}:${String(lstMinutes).padStart(2,'0')} LST`;
             document.getElementById('moonPhaseVal').innerText = calculateMoonPhase(now);
         }
 
@@ -703,16 +743,20 @@
             const diffDays = (date - refNewMoon) / (1000 * 60 * 60 * 24);
             const cycle = 29.5305877057;
             const daysIntoCycle = ((diffDays % cycle) + cycle) % cycle;
+            const illumPercent = Math.round(((1 - Math.cos((daysIntoCycle / cycle) * 2 * Math.PI)) / 2) * 100);
             
-            if (daysIntoCycle < 1.84) return "🌑 New Moon";
-            if (daysIntoCycle < 5.53) return "🌒 Waxing Crescent";
-            if (daysIntoCycle < 9.22) return "🌓 First Quarter";
-            if (daysIntoCycle < 12.91) return "🌔 Waxing Gibbous";
-            if (daysIntoCycle < 16.61) return "🌕 Full Moon";
-            if (daysIntoCycle < 20.30) return "🌖 Waning Gibbous";
-            if (daysIntoCycle < 23.99) return "🌗 Last Quarter";
-            if (daysIntoCycle < 27.68) return "🌘 Waning Crescent";
-            return "🌑 New Moon";
+            let phaseName = "New Moon";
+            if (daysIntoCycle < 1.84) phaseName = "🌑 New Moon";
+            else if (daysIntoCycle < 5.53) phaseName = "🌒 Waxing Crescent";
+            else if (daysIntoCycle < 9.22) phaseName = "🌓 First Quarter";
+            else if (daysIntoCycle < 12.91) phaseName = "🌔 Waxing Gibbous";
+            else if (daysIntoCycle < 16.61) phaseName = "🌕 Full Moon";
+            else if (daysIntoCycle < 20.30) phaseName = "🌖 Waning Gibbous";
+            else if (daysIntoCycle < 23.99) phaseName = "🌗 Last Quarter";
+            else if (daysIntoCycle < 27.68) phaseName = "🌘 Waning Crescent";
+            else phaseName = "🌑 New Moon";
+
+            return `${phaseName} (${illumPercent}%)`;
         }
 
         function updateStellarSimulator(temp) {
@@ -735,6 +779,7 @@
 
         function initStarCanvas() {
             const canvas = document.getElementById('starCanvas');
+            if (!canvas) return;
             const ctx = canvas.getContext('2d');
             let width = canvas.parentElement.offsetWidth;
             let height = canvas.parentElement.offsetHeight;
@@ -750,13 +795,13 @@
             });
 
             const stars = [];
-            for (let i = 0; i < 75; i++) {
+            for (let i = 0; i < 90; i++) {
                 stars.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
-                    radius: Math.random() * 1.5 + 0.5,
+                    radius: Math.random() * 1.6 + 0.4,
                     alpha: Math.random(),
-                    speed: Math.random() * 0.02 + 0.005
+                    speed: Math.random() * 0.025 + 0.004
                 });
             }
 
@@ -778,6 +823,8 @@
                     drawMilkyWayCore(ctx, width, height);
                 } else if (currentConstellationMode === 'deepsky') {
                     drawDeepSkyObjects(ctx, width, height);
+                } else if (currentConstellationMode === 'zodiac') {
+                    drawZodiacBand(ctx, width, height);
                 }
 
                 requestAnimationFrame(animate);
@@ -802,6 +849,9 @@
             } else if (mode === 'deepsky') {
                 title.innerText = "Perseus Radiant & Helix Nebula";
                 desc.innerText = "Spotlighting the Perseus meteor shower radiant point and deep-sky planetary targets like the Helix Nebula in Aquarius.";
+            } else if (mode === 'zodiac') {
+                title.innerText = "Zodiacal Band & Ecliptic Plane";
+                desc.innerText = "Tracing the apparent path of the Sun across the celestial sphere, aligning with planetary conjunctions and zodiac constellations.";
             }
         }
 
@@ -884,6 +934,21 @@
                 ctx.font = '11px Segoe UI';
                 ctx.fillText(t.label, t.x + 10, t.y + 4);
             });
+        }
+
+        function drawZodiacBand(ctx, w, h) {
+            ctx.strokeStyle = 'rgba(255, 200, 100, 0.35)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(0, h * 0.7);
+            ctx.quadraticCurveTo(w * 0.5, h * 0.2, w, h * 0.6);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = '#ffcc66';
+            ctx.font = '11px Segoe UI';
+            ctx.fillText('Ecliptic Plane / Zodiacal Track', w * 0.4, h * 0.45);
         }
 
         function setUnit(unit) {
@@ -1040,6 +1105,7 @@
 
                 renderWeatherUI(rawWeatherData);
                 initOrUpdateMap(lat, lon);
+                updateCalendarMetrics();
             } catch (e) {
                 console.warn("Fetch failed, falling back to cache:", e);
                 loadCachedWeatherData();
@@ -1230,7 +1296,7 @@
                     center: [lon, lat],
                     zoom: 6,
                     minZoom: 1,
-                    maxZoom: 19019028080 // Unlocked sub-atomic zoom limit
+                    maxZoom: 19019028080
                 });
 
                 map.addControl(new maplibregl.NavigationControl(), 'top-right');
