@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chevron Network | Advanced Weather, Radar & Astronomy Hub</title>
     
-    <!-- Dynamic Favicon Link -->
     <link id="dynamicFavicon" rel="icon" type="image/png" href="costume5.png">
-
-    <!-- MapLibre GL JS CSS for Infinite Vector Zooming -->
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
     
     <style>
@@ -35,7 +32,6 @@
             overflow-x: hidden;
         }
 
-        /* Header UI */
         header {
             width: 100%;
             background: linear-gradient(180deg, #2a0000 0%, var(--bg-dark) 100%);
@@ -62,12 +58,7 @@
 
         .logo-container { display: flex; flex-direction: column; }
         
-        .title-row {
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-        }
-
+        .title-row { display: flex; align-items: baseline; gap: 8px; }
         h1 { margin: 0; font-size: 1.8rem; letter-spacing: 2px; text-transform: uppercase; }
         h1 span { color: var(--accent-red); }
 
@@ -80,20 +71,11 @@
             border-radius: 3px;
             line-height: 1;
         }
-        .network-badge.online {
-            color: #00ff66;
-            border: 1px solid rgba(0, 255, 102, 0.4);
-            background: rgba(0, 255, 102, 0.1);
-        }
-        .network-badge.offline {
-            color: #ff3333;
-            border: 1px solid rgba(255, 51, 51, 0.4);
-            background: rgba(255, 51, 51, 0.1);
-        }
+        .network-badge.online { color: #00ff66; border: 1px solid rgba(0, 255, 102, 0.4); background: rgba(0, 255, 102, 0.1); }
+        .network-badge.offline { color: #ff3333; border: 1px solid rgba(255, 51, 51, 0.4); background: rgba(255, 51, 51, 0.1); }
 
         .chevron-bar { height: 3px; width: 50px; background: var(--accent-red); margin-top: 4px; }
 
-        /* Clock Hub in Header */
         .header-clocks {
             display: flex;
             align-items: center;
@@ -110,7 +92,6 @@
             color: #00ff66;
             letter-spacing: 1px;
         }
-        /* Analog Clock Face */
         .analog-clock {
             width: 44px;
             height: 44px;
@@ -127,7 +108,7 @@
             background: #fff;
             border-radius: 2px;
         }
-        .hour-hand { width: 3px; height: 11px; background: #fff; transform: translate(-50%, 0); }
+        .hour-hand { width: 3px; height: 11px; transform: translate(-50%, 0); }
         .min-hand { width: 2px; height: 16px; background: #a0a0b0; transform: translate(-50%, 0); }
         .sec-hand { width: 1px; height: 18px; background: var(--accent-red); transform: translate(-50%, 0); }
 
@@ -150,10 +131,7 @@
             font-size: 0.85rem;
             transition: 0.2s;
         }
-        .unit-btn.active {
-            background: var(--accent-red);
-            color: #ffffff;
-        }
+        .unit-btn.active { background: var(--accent-red); color: #ffffff; }
 
         button {
             background-color: var(--card-bg);
@@ -170,7 +148,6 @@
             box-shadow: 0 0 10px rgba(255, 42, 42, 0.5);
         }
 
-        /* Main Layout */
         main {
             width: 95%;
             max-width: 1100px;
@@ -228,10 +205,7 @@
             padding: 15px;
             box-sizing: border-box;
         }
-        .card.fullscreen-active #map {
-            flex: 1;
-            height: auto !important;
-        }
+        .card.fullscreen-active #map { flex: 1; height: auto !important; }
 
         .card-title {
             color: var(--accent-red);
@@ -272,88 +246,36 @@
         .legend-item { display: flex; align-items: center; gap: 5px; font-weight: 600; }
 
         .current-temp { font-size: 4rem; font-weight: bold; margin: 5px 0 0 0; }
-        .day-summary { 
-            color: #ff8888; 
-            font-size: 0.95rem; 
-            font-weight: 600; 
-            margin-bottom: 10px; 
-            letter-spacing: 0.5px;
-        }
+        .day-summary { color: #ff8888; font-size: 0.95rem; font-weight: 600; margin-bottom: 10px; letter-spacing: 0.5px; }
 
-        .icon-box { 
-            width: 80px; 
-            height: 80px; 
-            position: relative; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-        }
-        .sun-icon { 
-            width: 42px; 
-            height: 42px; 
-            background: #ffaa00; 
-            border-radius: 50%; 
-            box-shadow: 0 0 25px #ffaa00; 
-        }
-        .snow-icon { 
-            font-size: 3rem; 
-            color: #70d6ff; 
-            line-height: 1;
-            animation: spinSnow 10s linear infinite; 
-        }
+        .icon-box { width: 80px; height: 80px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .sun-icon { width: 42px; height: 42px; background: #ffaa00; border-radius: 50%; box-shadow: 0 0 25px #ffaa00; }
+        .snow-icon { font-size: 3rem; color: #70d6ff; line-height: 1; animation: spinSnow 10s linear infinite; }
         @keyframes spinSnow { 100% { transform: rotate(360deg); } }
         
-        .cloud-icon { 
-            width: 55px; 
-            height: 24px; 
-            background: #a0a0b0; 
-            border-radius: 20px; 
-            position: relative;
-            box-shadow: 0 0 10px rgba(160, 160, 176, 0.3);
-        }
+        .cloud-icon { width: 55px; height: 24px; background: #a0a0b0; border-radius: 20px; position: relative; box-shadow: 0 0 10px rgba(160, 160, 176, 0.3); }
         .cloud-icon::before {
             content: '';
             position: absolute;
-            top: -12px;
-            left: 10px;
-            width: 26px;
-            height: 26px;
-            background: #a0a0b0;
-            border-radius: 50%;
+            top: -12px; left: 10px;
+            width: 26px; height: 26px;
+            background: #a0a0b0; border-radius: 50%;
         }
 
-        .rain-drop { 
-            position: absolute; 
-            background: #ff2a2a; 
-            width: 3px; 
-            height: 12px; 
-            border-radius: 2px; 
-            animation: fallRain 1.1s infinite linear; 
-        }
-        @keyframes fallRain { 
-            0% { top: 45px; opacity: 1; } 
-            100% { top: 68px; opacity: 0; } 
-        }
+        .rain-drop { position: absolute; background: #ff2a2a; width: 3px; height: 12px; border-radius: 2px; animation: fallRain 1.1s infinite linear; }
+        @keyframes fallRain { 0% { top: 45px; opacity: 1; } 100% { top: 68px; opacity: 0; } }
 
-        .details-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
-            gap: 15px; 
-            margin-top: 20px; 
-            padding-top: 15px; 
-            border-top: 1px solid #2a2a30; 
-        }
+        .details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #2a2a30; }
         .detail-item span { display: block; font-size: 0.8rem; color: var(--text-dim); }
         .detail-item strong { font-size: 1.1rem; }
 
-        /* Astronomy & Space Hub Theme */
+        /* Advanced Astronomy & Space Hub Theme */
         .space-hub-card {
             background: radial-gradient(circle at 50% 20%, #181528 0%, #0c0a14 60%, #050408 100%);
             border: 1px solid #4a1525;
             position: relative;
             overflow: hidden;
         }
-        /* Cosmic Starry Dust Effect */
         .space-hub-card::before {
             content: '';
             position: absolute;
@@ -404,43 +326,12 @@
             padding: 15px;
             z-index: 2;
         }
-        .constellation-sky-canvas {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1;
-        }
-        .constellation-header-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-            z-index: 3;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .constellation-tabs {
-            display: flex;
-            gap: 6px;
-            background: rgba(0,0,0,0.6);
-            padding: 4px;
-            border-radius: 6px;
-            border: 1px solid #2a1a20;
-        }
-        .const-btn {
-            background: transparent;
-            color: var(--text-dim);
-            border: none;
-            padding: 5px 10px;
-            font-size: 0.75rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-        .const-btn.active {
-            background: var(--accent-red);
-            color: #fff;
-        }
+        .constellation-sky-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .constellation-header-bar { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 3; flex-wrap: wrap; gap: 10px; }
+        .constellation-tabs { display: flex; gap: 6px; background: rgba(0,0,0,0.6); padding: 4px; border-radius: 6px; border: 1px solid #2a1a20; }
+        .const-btn { background: transparent; color: var(--text-dim); border: none; padding: 5px 10px; font-size: 0.75rem; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .const-btn.active { background: var(--accent-red); color: #fff; }
+
         .constellation-info-overlay {
             position: relative;
             z-index: 3;
@@ -451,20 +342,25 @@
             max-width: 380px;
             backdrop-filter: blur(4px);
         }
-        .constellation-info-overlay h4 {
-            margin: 0 0 5px 0;
-            color: #ff6666;
-            font-size: 0.95rem;
-            letter-spacing: 0.5px;
-        }
-        .constellation-info-overlay p {
-            margin: 0;
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            line-height: 1.4;
-        }
+        .constellation-info-overlay h4 { margin: 0 0 5px 0; color: #ff6666; font-size: 0.95rem; letter-spacing: 0.5px; }
+        .constellation-info-overlay p { margin: 0; font-size: 0.8rem; color: var(--text-dim); line-height: 1.4; }
 
-        /* Space Events List */
+        /* Stellar Temp Converter Tool Inside Astronomy Section */
+        .stellar-calc-box {
+            background: rgba(13, 14, 18, 0.85);
+            border: 1px solid #3a1a2b;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .stellar-slider-row { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .stellar-slider { flex: 1; accent-color: var(--accent-red); cursor: pointer; }
+
         .event-item {
             display: flex;
             justify-content: space-between;
@@ -477,17 +373,8 @@
             position: relative;
             z-index: 2;
         }
-        .event-date {
-            background: #2a0000;
-            color: #ff8888;
-            padding: 3px 8px;
-            border-radius: 4px;
-            border: 1px solid var(--border-red);
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
+        .event-date { background: #2a0000; color: #ff8888; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border-red); font-size: 0.8rem; font-weight: bold; }
 
-        /* Full Day Cloud & Hourly Scroller */
         .hourly-scroller-controls {
             display: flex;
             justify-content: space-between;
@@ -501,73 +388,28 @@
             flex-wrap: wrap;
             gap: 8px;
         }
-        .cloud-watch-title {
-            font-size: 0.8rem;
-            color: var(--accent-red);
-            font-weight: bold;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        .cloud-stepper-btns {
-            display: flex;
-            gap: 6px;
-        }
-        .cloud-step-btn {
-            padding: 4px 10px;
-            font-size: 0.75rem;
-            background: #1a1a24;
-        }
+        .cloud-watch-title { font-size: 0.8rem; color: var(--accent-red); font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; }
+        .cloud-stepper-btns { display: flex; gap: 6px; }
+        .cloud-step-btn { padding: 4px 10px; font-size: 0.75rem; background: #1a1a24; }
 
-        .hourly-container { 
-            display: grid; 
-            grid-template-columns: repeat(24, minmax(55px, 1fr)); 
-            gap: 6px; 
-            width: 100%;
-            overflow-x: auto;
-            padding-bottom: 8px;
-        }
+        .hourly-container { display: grid; grid-template-columns: repeat(24, minmax(55px, 1fr)); gap: 6px; width: 100%; overflow-x: auto; padding-bottom: 8px; }
         .hourly-card { 
             background: rgba(255,255,255,0.03); 
             padding: 8px 4px; 
             border-radius: 4px; 
             text-align: center; 
             border: 1px solid #2a2a30; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            transition: 0.2s;
-            cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; gap: 3px; 
+            transition: 0.2s; cursor: pointer;
         }
-        .hourly-card:hover {
-            border-color: var(--accent-red);
-            background: rgba(255, 42, 42, 0.05);
-        }
-        .hourly-card.active-hour {
-            border-color: var(--accent-red);
-            background: rgba(255, 42, 42, 0.15);
-            box-shadow: 0 0 10px rgba(255, 42, 42, 0.3);
-        }
+        .hourly-card:hover { border-color: var(--accent-red); background: rgba(255, 42, 42, 0.05); }
+        .hourly-card.active-hour { border-color: var(--accent-red); background: rgba(255, 42, 42, 0.15); box-shadow: 0 0 10px rgba(255, 42, 42, 0.3); }
 
-        .daily-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 12px 0; 
-            border-bottom: 1px solid #2a2a30; 
-        }
-
+        .daily-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #2a2a30; }
         .saved-tags { display: flex; gap: 8px; flex-wrap: wrap; }
         .tag { background: #1f0000; border: 1px solid var(--border-red); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; }
 
-        /* MapLibre Map Container */
-        #map { 
-            height: 480px; 
-            width: 100%; 
-            border-radius: 6px;
-            border: 2px solid #2a2a38;
-            background-color: #0b0e14;
-        }
+        #map { height: 480px; width: 100%; border-radius: 6px; border: 2px solid #2a2a38; background-color: #0b0e14; }
 
         footer { margin-top: auto; padding: 20px; font-size: 0.8rem; color: var(--text-dim); }
     </style>
@@ -577,7 +419,6 @@
     <header>
         <div class="logo-section">
             <img id="chevronLogo" class="logo-svg" src="costume5.png" alt="Chevron Network Logo">
-
             <div class="logo-container">
                 <div class="title-row">
                     <h1>Chevron <span>Network</span></h1>
@@ -587,7 +428,6 @@
             </div>
         </div>
 
-        <!-- Clocks Hub: Digital & Analog -->
         <div class="header-clocks">
             <div class="analog-clock" id="analogClock">
                 <div class="hand hour-hand" id="hourHand"></div>
@@ -622,7 +462,6 @@
             <div id="alertDesc" style="margin-top: 5px;">Scanning local hazards...</div>
         </div>
 
-        <!-- Current Radar Station & Weather -->
         <div class="card">
             <div class="card-title">Current Radar Station</div>
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
@@ -645,11 +484,11 @@
             </div>
         </div>
 
-        <!-- Astronomy & Space Hub Panel -->
+        <!-- Ultra-Advanced Astronomy & Space Hub Panel -->
         <div class="card space-hub-card">
             <div class="card-title" style="border-color: #3a1525; z-index: 2;">
-                <span>🌌 Astronomy & Constellation Spotter</span>
-                <span style="font-size: 0.75rem; color: #ff8888; font-weight: normal;">Live Deep-Space Sky Tracker</span>
+                <span>🌌 Astronomy & Deep-Space Observatory Hub</span>
+                <span style="font-size: 0.75rem; color: #ff8888; font-weight: normal;">Advanced Stellar & Celestial Tracker</span>
             </div>
             
             <div class="astro-grid">
@@ -675,7 +514,7 @@
                 </div>
             </div>
 
-            <!-- Interactive Constellation Spotter Viewport -->
+            <!-- Constellation Spotter Interactive Viewport -->
             <div class="constellation-viewport">
                 <canvas class="constellation-sky-canvas" id="starCanvas"></canvas>
                 
@@ -693,20 +532,26 @@
                     <p id="constDesc">Directly overhead on August evenings, linking the hyper-bright anchor stars Vega (in Lyra), Deneb (in Cygnus), and Altair (in Aquila).</p>
                 </div>
             </div>
+
+            <!-- Stellar Temperature & Spectral Calculator Tool -->
+            <div class="stellar-calc-box">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                    <strong style="font-size: 0.85rem; color: #ff8888; text-transform: uppercase; letter-spacing: 0.5px;">🌟 Stellar Temperature & Spectral Class Simulator</strong>
+                    <span id="stellarTempReadout" style="font-family: 'Courier New', monospace; color: #00ff66; font-weight: bold;">5,778 K (Class G - Solar Type)</span>
+                </div>
+                <div class="stellar-slider-row">
+                    <input type="range" min="2000" max="40000" step="100" value="5778" class="stellar-slider" id="stellarSlider" oninput="updateStellarSimulator(this.value)">
+                </div>
+                <div style="font-size: 0.78rem; color: var(--text-dim);" id="stellarDesc">
+                    Yellow main-sequence star. Highly stable fusion core supporting planetary systems.
+                </div>
+            </div>
         </div>
 
-        <!-- Upcoming Space Events & Eclipses Panel -->
+        <!-- Upcoming Space Events Panel -->
         <div class="card space-hub-card">
             <div class="card-title" style="border-color: #3a1525; z-index: 2;">🔭 Upcoming 2026 Space Events & Eclipses</div>
             <div style="display: flex; flex-direction: column; gap: 5px;" id="spaceEventsList">
-                <div class="event-item">
-                    <div><strong>Annular Solar Eclipse</strong> — Partial across South America, Antarctica, Africa; Annular in Antarctica</div>
-                    <div class="event-date">Feb 17, 2026</div>
-                </div>
-                <div class="event-item">
-                    <div><strong>Total Lunar Eclipse</strong> — Full "Blood Moon" visible across North/South America, Asia, and Australia</div>
-                    <div class="event-date">Mar 3, 2026</div>
-                </div>
                 <div class="event-item">
                     <div><strong>Total Solar Eclipse</strong> — Totality visible in Spain, Greenland, Iceland; Partial in North America</div>
                     <div class="event-date">Aug 12, 2026</div>
@@ -726,10 +571,10 @@
             </div>
         </div>
 
-        <!-- Infinite Zoom Radar Map Container -->
+        <!-- Infinite Molecular Zoom Radar Map Container (Max Zoom 19,019,028,080) -->
         <div class="card" id="radarCardContainer" style="padding: 15px;">
             <div class="card-title">
-                <span>Infinite Vector Doppler Radar (Dark Mode • No Zoom Limit)</span>
+                <span>Infinite Vector Molecular Radar (Dark Mode • Max Zoom 19,019,028,080)</span>
                 <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                     <div class="radar-legend">
                         <div class="legend-item"><span style="color:#00ff88;">Light</span></div>
@@ -749,7 +594,6 @@
             
             <div id="map"></div>
 
-            <!-- Full Day Cloud & Hourly Timeline Scroller -->
             <div class="hourly-scroller-controls">
                 <span class="cloud-watch-title">☁️ Full 24-Hour Cloud & Radar Timeline: <span id="selectedHourIndicator" style="color:var(--text-light); font-weight:normal;">Current Hour</span></span>
                 <div class="cloud-stepper-btns">
@@ -769,7 +613,6 @@
 
     <footer>Chevron Network &bull; 100% Ad-Free Weather Radar & Astronomy Hub</footer>
 
-    <!-- MapLibre GL JS Library for Vector Infinite Zoom -->
     <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
     <script>
         let map, currentUser = null, currentCoords = null, currentCityName = "", locationMarker = null;
@@ -823,11 +666,8 @@
 
         function updateClockHub() {
             const now = new Date();
-            
-            // Digital Clock
             document.getElementById('digitalClock').innerText = now.toLocaleTimeString();
 
-            // Analog Clock
             const seconds = now.getSeconds();
             const minutes = now.getMinutes();
             const hours = now.getHours();
@@ -843,29 +683,23 @@
 
         function updateCalendarMetrics() {
             const now = new Date();
-            
-            // Day of Year
             const start = new Date(now.getFullYear(), 0, 0);
             const diff = now - start;
             const oneDay = 1000 * 60 * 60 * 24;
             const dayOfYear = Math.floor(diff / oneDay);
             document.getElementById('dayOfYearVal').innerText = `Day ${dayOfYear} of ${now.getFullYear() % 4 === 0 ? 366 : 365}`;
 
-            // Week Number
             const firstDay = new Date(now.getFullYear(), 0, 1);
             const weekNumber = Math.ceil((((now - firstDay) / oneDay) + firstDay.getDay() + 1) / 7);
             document.getElementById('weekNumVal').innerText = `Week ${weekNumber}`;
 
-            // Quarter of Year
             const quarter = Math.floor(now.getMonth() / 3) + 1;
             document.getElementById('quarterVal').innerText = `Q${quarter} (${['Jan-Mar', 'Apr-Jun', 'Jul-Sep', 'Oct-Dec'][quarter - 1]})`;
-
-            // Moon Phase Calculation approximation
             document.getElementById('moonPhaseVal').innerText = calculateMoonPhase(now);
         }
 
         function calculateMoonPhase(date) {
-            const refNewMoon = new Date(2026, 0, 18); // Jan 18, 2026 New Moon reference
+            const refNewMoon = new Date(2026, 0, 18);
             const diffDays = (date - refNewMoon) / (1000 * 60 * 60 * 24);
             const cycle = 29.5305877057;
             const daysIntoCycle = ((diffDays % cycle) + cycle) % cycle;
@@ -881,7 +715,24 @@
             return "🌑 New Moon";
         }
 
-        /* Constellation Spotter Interactive Canvas Animation */
+        function updateStellarSimulator(temp) {
+            const t = parseInt(temp);
+            let spectral = "M (Red Dwarf)";
+            let desc = "Cool stellar body with ultra-long lifespans. Emits faint reddish light.";
+            let color = "#ff6666";
+
+            if (t >= 30000) { spectral = "O (Blue Hypergiant)"; desc = "Massive, extremely luminous blue star burning through fuel at extreme speeds."; color = "#70d6ff"; }
+            else if (t >= 10000) { spectral = "B (Blue-White Star)"; desc = "Bright, massive star with prominent helium absorption lines."; color = "#aaccff"; }
+            else if (t >= 7500) { spectral = "A (White Star)"; desc = "Blazing white stellar body, including prominent stars like Vega and Sirius."; color = "#ffffff"; }
+            else if (t >= 6000) { spectral = "F (Yellow-White Star)"; desc = "Slightly hotter and more massive than our Sun."; color = "#ffffcc"; }
+            else if (t >= 5000) { spectral = "G (Yellow - Solar Type)"; desc = "Yellow main-sequence star. Highly stable fusion core supporting planetary systems."; color = "#ffaa00"; }
+            else if (t >= 3700) { spectral = "K (Orange Dwarf)"; desc = "Cooler than the Sun, highly stable, long-lived orange stars."; color = "#ff7700"; }
+
+            document.getElementById('stellarTempReadout').innerText = `${t.toLocaleString()} K (Class ${spectral})`;
+            document.getElementById('stellarTempReadout').style.color = color;
+            document.getElementById('stellarDesc').innerText = desc;
+        }
+
         function initStarCanvas() {
             const canvas = document.getElementById('starCanvas');
             const ctx = canvas.getContext('2d');
@@ -898,7 +749,6 @@
                 canvas.height = height;
             });
 
-            // Generate background stars
             const stars = [];
             for (let i = 0; i < 75; i++) {
                 stars.push({
@@ -913,7 +763,6 @@
             function animate() {
                 ctx.clearRect(0, 0, width, height);
 
-                // Render background starfield
                 stars.forEach(star => {
                     star.alpha += star.speed;
                     if (star.alpha > 1 || star.alpha < 0.2) star.speed = -star.speed;
@@ -923,7 +772,6 @@
                     ctx.fill();
                 });
 
-                // Render specific constellation geometries based on active mode
                 if (currentConstellationMode === 'triangle') {
                     drawTriangleConstellation(ctx, width, height);
                 } else if (currentConstellationMode === 'milkyway') {
@@ -958,12 +806,10 @@
         }
 
         function drawTriangleConstellation(ctx, w, h) {
-            // Vega, Deneb, Altair positions
             const vega = { x: w * 0.3, y: h * 0.35, name: 'Vega (Lyra)' };
             const deneb = { x: w * 0.7, y: h * 0.25, name: 'Deneb (Cygnus)' };
             const altair = { x: w * 0.5, y: h * 0.75, name: 'Altair (Aquila)' };
 
-            // Draw connecting lines
             ctx.strokeStyle = 'rgba(255, 42, 42, 0.5)';
             ctx.lineWidth = 1.5;
             ctx.beginPath();
@@ -973,7 +819,6 @@
             ctx.closePath();
             ctx.stroke();
 
-            // Draw Stars & Labels
             [vega, deneb, altair].forEach(star => {
                 ctx.beginPath();
                 ctx.arc(star.x, star.y, 4, 0, Math.PI * 2);
@@ -981,7 +826,7 @@
                 ctx.shadowBlur = 12;
                 ctx.shadowColor = '#ff2a2a';
                 ctx.fill();
-                ctx.shadowBlur = 0; // reset
+                ctx.shadowBlur = 0;
 
                 ctx.fillStyle = '#f0f0f5';
                 ctx.font = '11px Segoe UI';
@@ -990,7 +835,6 @@
         }
 
         function drawMilkyWayCore(ctx, w, h) {
-            // Gradient band representing the galactic plane
             const grad = ctx.createLinearGradient(0, h, w, 0);
             grad.addColorStop(0, 'rgba(100, 50, 120, 0.15)');
             grad.addColorStop(0.5, 'rgba(200, 150, 255, 0.3)');
@@ -1005,7 +849,6 @@
             ctx.closePath();
             ctx.fill();
 
-            // Core glow marker
             ctx.beginPath();
             ctx.arc(w * 0.65, h * 0.6, 15, 0, Math.PI * 2);
             ctx.fillStyle = 'rgba(255, 200, 100, 0.25)';
@@ -1107,10 +950,10 @@
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     pos => fetchWeatherData(pos.coords.latitude, pos.coords.longitude, "Local Station"),
-                    () => fetchWeatherData(40.7128, -74.0060, "New York")
+                    () => fetchWeatherData(43.1266, -79.2064, "Thorold")
                 );
             } else {
-                fetchWeatherData(40.7128, -74.0060, "New York");
+                fetchWeatherData(43.1266, -79.2064, "Thorold");
             }
         }
 
@@ -1255,7 +1098,6 @@
             document.getElementById('pressure').innerText = `${Math.round(c.surface_pressure)} hPa`;
             document.getElementById('dew').innerText = convertTemp(c.dew_point_2m);
 
-            // Sunrise & Sunset render
             if (data.daily.sunrise && data.daily.sunrise[0]) {
                 const sunriseTime = new Date(data.daily.sunrise[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 const sunsetTime = new Date(data.daily.sunset[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -1338,7 +1180,6 @@
             }
 
             document.getElementById('selectedHourIndicator').innerText = `${new Date(hourly.time[activeCloudIndex]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` + (activeCloudIndex === getRealCurrentIndex() ? ' (Current)' : '');
-            
             updateRadarForSelectedHour();
         }
 
@@ -1389,7 +1230,7 @@
                     center: [lon, lat],
                     zoom: 6,
                     minZoom: 1,
-                    maxZoom: 24
+                    maxZoom: 19019028080 // Unlocked sub-atomic zoom limit
                 });
 
                 map.addControl(new maplibregl.NavigationControl(), 'top-right');
@@ -1423,7 +1264,6 @@
 
         async function loadRadarFramesAndSetup(lat, lon) {
             updateLocationMarker(lat, lon);
-
             if (!navigator.onLine) return;
 
             try {
@@ -1456,7 +1296,7 @@
                     type: 'raster',
                     tiles: [radarTileUrl],
                     tileSize: 256,
-                    maxzoom: 24
+                    maxzoom: 19019028080
                 });
 
                 map.addLayer({
