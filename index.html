@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chevron Network | Pure Weather & Tornado Radar</title>
+    <title>Chevron Network | Advanced Weather, Radar & Astronomy Hub</title>
     
     <!-- Dynamic Favicon Link -->
     <link id="dynamicFavicon" rel="icon" type="image/png" href="costume5.png">
@@ -13,12 +13,12 @@
     
     <style>
         :root {
-            --bg-dark: #0a0a0c;
-            --card-bg: #141419;
+            --bg-dark: #07070b;
+            --card-bg: #121218;
             --accent-red: #ff2a2a;
             --border-red: #8b0000;
-            --text-light: #f0f0f0;
-            --text-dim: #a0a0a0;
+            --text-light: #f0f0f5;
+            --text-dim: #9494a0;
         }
 
         * { box-sizing: border-box; }
@@ -45,6 +45,9 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 20px rgba(255, 42, 42, 0.25);
+            flex-wrap: wrap;
+            gap: 15px;
+            z-index: 10;
         }
 
         .logo-section { display: flex; align-items: center; gap: 15px; }
@@ -89,6 +92,44 @@
         }
 
         .chevron-bar { height: 3px; width: 50px; background: var(--accent-red); margin-top: 4px; }
+
+        /* Clock Hub in Header */
+        .header-clocks {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(0,0,0,0.4);
+            padding: 8px 15px;
+            border-radius: 6px;
+            border: 1px solid #2a2a30;
+        }
+        .digital-clock-display {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #00ff66;
+            letter-spacing: 1px;
+        }
+        /* Analog Clock Face */
+        .analog-clock {
+            width: 44px;
+            height: 44px;
+            border: 2px solid var(--accent-red);
+            border-radius: 50%;
+            position: relative;
+            background: #0d0e12;
+        }
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom;
+            background: #fff;
+            border-radius: 2px;
+        }
+        .hour-hand { width: 3px; height: 11px; background: #fff; transform: translate(-50%, 0); }
+        .min-hand { width: 2px; height: 16px; background: #a0a0b0; transform: translate(-50%, 0); }
+        .sec-hand { width: 1px; height: 18px; background: var(--accent-red); transform: translate(-50%, 0); }
 
         .user-nav { display: flex; gap: 10px; align-items: center; }
 
@@ -305,7 +346,148 @@
         .detail-item span { display: block; font-size: 0.8rem; color: var(--text-dim); }
         .detail-item strong { font-size: 1.1rem; }
 
-        /* Cloud & Hourly Watch Timeline */
+        /* Astronomy & Space Hub Theme */
+        .space-hub-card {
+            background: radial-gradient(circle at 50% 20%, #181528 0%, #0c0a14 60%, #050408 100%);
+            border: 1px solid #4a1525;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Cosmic Starry Dust Effect */
+        .space-hub-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(white 1px, transparent 0),
+                radial-gradient(rgba(255,42,42,0.4) 1px, transparent 0);
+            background-size: 60px 60px, 90px 90px;
+            background-position: 0 0, 30px 30px;
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        .astro-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+            position: relative;
+            z-index: 2;
+        }
+        .astro-card {
+            background: rgba(13, 14, 18, 0.75);
+            backdrop-filter: blur(5px);
+            border: 1px solid #2d2035;
+            border-radius: 6px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .astro-card span { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+        .astro-card strong { font-size: 1.1rem; color: #ff8888; }
+
+        /* Constellation Spotter Interactive Viewport */
+        .constellation-viewport {
+            width: 100%;
+            height: 340px;
+            background: #030205;
+            border: 1px solid #3a1a2b;
+            border-radius: 6px;
+            position: relative;
+            margin-top: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+            z-index: 2;
+        }
+        .constellation-sky-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+        }
+        .constellation-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 3;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .constellation-tabs {
+            display: flex;
+            gap: 6px;
+            background: rgba(0,0,0,0.6);
+            padding: 4px;
+            border-radius: 6px;
+            border: 1px solid #2a1a20;
+        }
+        .const-btn {
+            background: transparent;
+            color: var(--text-dim);
+            border: none;
+            padding: 5px 10px;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .const-btn.active {
+            background: var(--accent-red);
+            color: #fff;
+        }
+        .constellation-info-overlay {
+            position: relative;
+            z-index: 3;
+            background: rgba(10, 8, 14, 0.85);
+            border: 1px solid #421c2c;
+            padding: 12px 15px;
+            border-radius: 6px;
+            max-width: 380px;
+            backdrop-filter: blur(4px);
+        }
+        .constellation-info-overlay h4 {
+            margin: 0 0 5px 0;
+            color: #ff6666;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+        .constellation-info-overlay p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        /* Space Events List */
+        .event-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #2a1a20;
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+            gap: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        .event-date {
+            background: #2a0000;
+            color: #ff8888;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-red);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* Full Day Cloud & Hourly Scroller */
         .hourly-scroller-controls {
             display: flex;
             justify-content: space-between;
@@ -316,6 +498,8 @@
             padding: 8px 12px;
             border-radius: 6px;
             border: 1px solid #22252e;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .cloud-watch-title {
             font-size: 0.8rem;
@@ -336,11 +520,11 @@
 
         .hourly-container { 
             display: grid; 
-            grid-template-columns: repeat(11, minmax(65px, 1fr)); 
+            grid-template-columns: repeat(24, minmax(55px, 1fr)); 
             gap: 6px; 
             width: 100%;
             overflow-x: auto;
-            padding-bottom: 5px;
+            padding-bottom: 8px;
         }
         .hourly-card { 
             background: rgba(255,255,255,0.03); 
@@ -378,7 +562,7 @@
 
         /* MapLibre Map Container */
         #map { 
-            height: 460px; 
+            height: 480px; 
             width: 100%; 
             border-radius: 6px;
             border: 2px solid #2a2a38;
@@ -401,6 +585,16 @@
                 </div>
                 <div class="chevron-bar"></div>
             </div>
+        </div>
+
+        <!-- Clocks Hub: Digital & Analog -->
+        <div class="header-clocks">
+            <div class="analog-clock" id="analogClock">
+                <div class="hand hour-hand" id="hourHand"></div>
+                <div class="hand min-hand" id="minHand"></div>
+                <div class="hand sec-hand" id="secHand"></div>
+            </div>
+            <div class="digital-clock-display" id="digitalClock">--:--:-- --</div>
         </div>
 
         <div class="user-nav">
@@ -428,9 +622,10 @@
             <div id="alertDesc" style="margin-top: 5px;">Scanning local hazards...</div>
         </div>
 
+        <!-- Current Radar Station & Weather -->
         <div class="card">
             <div class="card-title">Current Radar Station</div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
                 <div>
                     <h2 id="cityName" style="margin: 0;">Detecting Location...</h2>
                     <div id="weatherDesc" style="color: var(--text-dim);">Scanning atmosphere...</div>
@@ -450,9 +645,91 @@
             </div>
         </div>
 
+        <!-- Astronomy & Space Hub Panel -->
+        <div class="card space-hub-card">
+            <div class="card-title" style="border-color: #3a1525; z-index: 2;">
+                <span>🌌 Astronomy & Constellation Spotter</span>
+                <span style="font-size: 0.75rem; color: #ff8888; font-weight: normal;">Live Deep-Space Sky Tracker</span>
+            </div>
+            
+            <div class="astro-grid">
+                <div class="astro-card">
+                    <span>Moon Phase</span>
+                    <strong id="moonPhaseVal">--</strong>
+                </div>
+                <div class="astro-card">
+                    <span>Sunrise / Sunset</span>
+                    <strong id="sunTimesVal" style="font-size: 1rem;">-- / --</strong>
+                </div>
+                <div class="astro-card">
+                    <span>Day of Year</span>
+                    <strong id="dayOfYearVal">--</strong>
+                </div>
+                <div class="astro-card">
+                    <span>Week Number</span>
+                    <strong id="weekNumVal">--</strong>
+                </div>
+                <div class="astro-card">
+                    <span>Quarter of Year</span>
+                    <strong id="quarterVal">--</strong>
+                </div>
+            </div>
+
+            <!-- Interactive Constellation Spotter Viewport -->
+            <div class="constellation-viewport">
+                <canvas class="constellation-sky-canvas" id="starCanvas"></canvas>
+                
+                <div class="constellation-header-bar">
+                    <span style="font-size: 0.8rem; font-weight: bold; color: #ff8888; letter-spacing: 0.5px; text-transform: uppercase;">✨ Constellation & Celestial Spotter</span>
+                    <div class="constellation-tabs">
+                        <button class="const-btn active" onclick="switchConstellation('triangle', event)">Summer Triangle</button>
+                        <button class="const-btn" onclick="switchConstellation('milkyway', event)">Milky Way Core</button>
+                        <button class="const-btn" onclick="switchConstellation('deepsky', event)">Deep-Sky Objects</button>
+                    </div>
+                </div>
+
+                <div class="constellation-info-overlay" id="constInfoBox">
+                    <h4 id="constTitle">The Summer Triangle</h4>
+                    <p id="constDesc">Directly overhead on August evenings, linking the hyper-bright anchor stars Vega (in Lyra), Deneb (in Cygnus), and Altair (in Aquila).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Space Events & Eclipses Panel -->
+        <div class="card space-hub-card">
+            <div class="card-title" style="border-color: #3a1525; z-index: 2;">🔭 Upcoming 2026 Space Events & Eclipses</div>
+            <div style="display: flex; flex-direction: column; gap: 5px;" id="spaceEventsList">
+                <div class="event-item">
+                    <div><strong>Annular Solar Eclipse</strong> — Partial across South America, Antarctica, Africa; Annular in Antarctica</div>
+                    <div class="event-date">Feb 17, 2026</div>
+                </div>
+                <div class="event-item">
+                    <div><strong>Total Lunar Eclipse</strong> — Full "Blood Moon" visible across North/South America, Asia, and Australia</div>
+                    <div class="event-date">Mar 3, 2026</div>
+                </div>
+                <div class="event-item">
+                    <div><strong>Total Solar Eclipse</strong> — Totality visible in Spain, Greenland, Iceland; Partial in North America</div>
+                    <div class="event-date">Aug 12, 2026</div>
+                </div>
+                <div class="event-item">
+                    <div><strong>Perseid Meteor Shower Peak</strong> — One of the year's best meteor displays under dark skies</div>
+                    <div class="event-date">Aug 12-13, 2026</div>
+                </div>
+                <div class="event-item">
+                    <div><strong>Partial Lunar Eclipse</strong> — Visible across the Americas, Europe, and Africa</div>
+                    <div class="event-date">Aug 28, 2026</div>
+                </div>
+                <div class="event-item">
+                    <div><strong>Geminid Meteor Shower Peak</strong> — The year's most reliable and brilliant meteor shower</div>
+                    <div class="event-date">Dec 13-14, 2026</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Infinite Zoom Radar Map Container -->
         <div class="card" id="radarCardContainer" style="padding: 15px;">
             <div class="card-title">
-                <span>Infinite Vector Doppler Radar (Dark Mode)</span>
+                <span>Infinite Vector Doppler Radar (Dark Mode • No Zoom Limit)</span>
                 <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                     <div class="radar-legend">
                         <div class="legend-item"><span style="color:#00ff88;">Light</span></div>
@@ -472,9 +749,9 @@
             
             <div id="map"></div>
 
-            <!-- Cloud Stepper embedded directly on the Map card -->
+            <!-- Full Day Cloud & Hourly Timeline Scroller -->
             <div class="hourly-scroller-controls">
-                <span class="cloud-watch-title">☁️ Sky & Cloud Watcher (±5h): <span id="selectedHourIndicator" style="color:var(--text-light); font-weight:normal;">Current Hour</span></span>
+                <span class="cloud-watch-title">☁️ Full 24-Hour Cloud & Radar Timeline: <span id="selectedHourIndicator" style="color:var(--text-light); font-weight:normal;">Current Hour</span></span>
                 <div class="cloud-stepper-btns">
                     <button class="cloud-step-btn" onclick="shiftCloudWatch(-1)">◀ Prev Hour</button>
                     <button class="cloud-step-btn" onclick="resetToCurrentHour()">Now</button>
@@ -490,7 +767,7 @@
         </div>
     </main>
 
-    <footer>Chevron Network &bull; 100% Ad-Free Weather Radar & Warning System</footer>
+    <footer>Chevron Network &bull; 100% Ad-Free Weather Radar & Astronomy Hub</footer>
 
     <!-- MapLibre GL JS Library for Vector Infinite Zoom -->
     <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
@@ -499,6 +776,8 @@
         let currentUnit = 'C';
         let rawWeatherData = null;
         let activeCloudIndex = 0;
+        let radarFrames = [];
+        let currentConstellationMode = 'triangle';
 
         const wmoCodes = {
             0: "Clear Sky", 1: "Mainly Clear", 2: "Partly Cloudy", 3: "Overcast",
@@ -510,6 +789,11 @@
             updateNetworkStatus();
             window.addEventListener('online', updateNetworkStatus);
             window.addEventListener('offline', updateNetworkStatus);
+
+            setInterval(updateClockHub, 1000);
+            updateClockHub();
+            updateCalendarMetrics();
+            initStarCanvas();
 
             const savedUser = localStorage.getItem('chevron_user');
             if (savedUser) {
@@ -535,6 +819,228 @@
                 badge.innerText = "Offline";
                 badge.className = "network-badge offline";
             }
+        }
+
+        function updateClockHub() {
+            const now = new Date();
+            
+            // Digital Clock
+            document.getElementById('digitalClock').innerText = now.toLocaleTimeString();
+
+            // Analog Clock
+            const seconds = now.getSeconds();
+            const minutes = now.getMinutes();
+            const hours = now.getHours();
+
+            const secDeg = (seconds / 60) * 360;
+            const minDeg = ((minutes + seconds / 60) / 60) * 360;
+            const hourDeg = ((hours % 12 + minutes / 60) / 12) * 360;
+
+            document.getElementById('secHand').style.transform = `translate(-50%, 0) rotate(${secDeg}deg)`;
+            document.getElementById('minHand').style.transform = `translate(-50%, 0) rotate(${minDeg}deg)`;
+            document.getElementById('hourHand').style.transform = `translate(-50%, 0) rotate(${hourDeg}deg)`;
+        }
+
+        function updateCalendarMetrics() {
+            const now = new Date();
+            
+            // Day of Year
+            const start = new Date(now.getFullYear(), 0, 0);
+            const diff = now - start;
+            const oneDay = 1000 * 60 * 60 * 24;
+            const dayOfYear = Math.floor(diff / oneDay);
+            document.getElementById('dayOfYearVal').innerText = `Day ${dayOfYear} of ${now.getFullYear() % 4 === 0 ? 366 : 365}`;
+
+            // Week Number
+            const firstDay = new Date(now.getFullYear(), 0, 1);
+            const weekNumber = Math.ceil((((now - firstDay) / oneDay) + firstDay.getDay() + 1) / 7);
+            document.getElementById('weekNumVal').innerText = `Week ${weekNumber}`;
+
+            // Quarter of Year
+            const quarter = Math.floor(now.getMonth() / 3) + 1;
+            document.getElementById('quarterVal').innerText = `Q${quarter} (${['Jan-Mar', 'Apr-Jun', 'Jul-Sep', 'Oct-Dec'][quarter - 1]})`;
+
+            // Moon Phase Calculation approximation
+            document.getElementById('moonPhaseVal').innerText = calculateMoonPhase(now);
+        }
+
+        function calculateMoonPhase(date) {
+            const refNewMoon = new Date(2026, 0, 18); // Jan 18, 2026 New Moon reference
+            const diffDays = (date - refNewMoon) / (1000 * 60 * 60 * 24);
+            const cycle = 29.5305877057;
+            const daysIntoCycle = ((diffDays % cycle) + cycle) % cycle;
+            
+            if (daysIntoCycle < 1.84) return "🌑 New Moon";
+            if (daysIntoCycle < 5.53) return "🌒 Waxing Crescent";
+            if (daysIntoCycle < 9.22) return "🌓 First Quarter";
+            if (daysIntoCycle < 12.91) return "🌔 Waxing Gibbous";
+            if (daysIntoCycle < 16.61) return "🌕 Full Moon";
+            if (daysIntoCycle < 20.30) return "🌖 Waning Gibbous";
+            if (daysIntoCycle < 23.99) return "🌗 Last Quarter";
+            if (daysIntoCycle < 27.68) return "🌘 Waning Crescent";
+            return "🌑 New Moon";
+        }
+
+        /* Constellation Spotter Interactive Canvas Animation */
+        function initStarCanvas() {
+            const canvas = document.getElementById('starCanvas');
+            const ctx = canvas.getContext('2d');
+            let width = canvas.parentElement.offsetWidth;
+            let height = canvas.parentElement.offsetHeight;
+            canvas.width = width;
+            canvas.height = height;
+
+            window.addEventListener('resize', () => {
+                if (!canvas.parentElement) return;
+                width = canvas.parentElement.offsetWidth;
+                height = canvas.parentElement.offsetHeight;
+                canvas.width = width;
+                canvas.height = height;
+            });
+
+            // Generate background stars
+            const stars = [];
+            for (let i = 0; i < 75; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 1.5 + 0.5,
+                    alpha: Math.random(),
+                    speed: Math.random() * 0.02 + 0.005
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                // Render background starfield
+                stars.forEach(star => {
+                    star.alpha += star.speed;
+                    if (star.alpha > 1 || star.alpha < 0.2) star.speed = -star.speed;
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.alpha)})`;
+                    ctx.fill();
+                });
+
+                // Render specific constellation geometries based on active mode
+                if (currentConstellationMode === 'triangle') {
+                    drawTriangleConstellation(ctx, width, height);
+                } else if (currentConstellationMode === 'milkyway') {
+                    drawMilkyWayCore(ctx, width, height);
+                } else if (currentConstellationMode === 'deepsky') {
+                    drawDeepSkyObjects(ctx, width, height);
+                }
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        function switchConstellation(mode, event) {
+            currentConstellationMode = mode;
+            document.querySelectorAll('.const-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const title = document.getElementById('constTitle');
+            const desc = document.getElementById('constDesc');
+
+            if (mode === 'triangle') {
+                title.innerText = "The Summer Triangle";
+                desc.innerText = "Directly overhead on August evenings, linking the hyper-bright anchor stars Vega (in Lyra), Deneb (in Cygnus), and Altair (in Aquila).";
+            } else if (mode === 'milkyway') {
+                title.innerText = "The Milky Way Core & Great Rift";
+                desc.innerText = "Stretching vividly across the southern sky, highlighting dense dust lanes and star clouds toward Sagittarius.";
+            } else if (mode === 'deepsky') {
+                title.innerText = "Perseus Radiant & Helix Nebula";
+                desc.innerText = "Spotlighting the Perseus meteor shower radiant point and deep-sky planetary targets like the Helix Nebula in Aquarius.";
+            }
+        }
+
+        function drawTriangleConstellation(ctx, w, h) {
+            // Vega, Deneb, Altair positions
+            const vega = { x: w * 0.3, y: h * 0.35, name: 'Vega (Lyra)' };
+            const deneb = { x: w * 0.7, y: h * 0.25, name: 'Deneb (Cygnus)' };
+            const altair = { x: w * 0.5, y: h * 0.75, name: 'Altair (Aquila)' };
+
+            // Draw connecting lines
+            ctx.strokeStyle = 'rgba(255, 42, 42, 0.5)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(vega.x, vega.y);
+            ctx.lineTo(deneb.x, deneb.y);
+            ctx.lineTo(altair.x, altair.y);
+            ctx.closePath();
+            ctx.stroke();
+
+            // Draw Stars & Labels
+            [vega, deneb, altair].forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#ff4444';
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = '#ff2a2a';
+                ctx.fill();
+                ctx.shadowBlur = 0; // reset
+
+                ctx.fillStyle = '#f0f0f5';
+                ctx.font = '11px Segoe UI';
+                ctx.fillText(star.name, star.x + 8, star.y + 4);
+            });
+        }
+
+        function drawMilkyWayCore(ctx, w, h) {
+            // Gradient band representing the galactic plane
+            const grad = ctx.createLinearGradient(0, h, w, 0);
+            grad.addColorStop(0, 'rgba(100, 50, 120, 0.15)');
+            grad.addColorStop(0.5, 'rgba(200, 150, 255, 0.3)');
+            grad.addColorStop(1, 'rgba(50, 80, 150, 0.15)');
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.moveTo(0, h * 0.2);
+            ctx.lineTo(w, h * 0.8);
+            ctx.lineTo(w, h);
+            ctx.lineTo(0, h * 0.5);
+            ctx.closePath();
+            ctx.fill();
+
+            // Core glow marker
+            ctx.beginPath();
+            ctx.arc(w * 0.65, h * 0.6, 15, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 200, 100, 0.25)';
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = '#ffaa00';
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle = '#ffcc66';
+            ctx.font = '11px Segoe UI';
+            ctx.fillText('Galactic Center (Sagittarius)', w * 0.65 + 18, h * 0.6 + 4);
+        }
+
+        function drawDeepSkyObjects(ctx, w, h) {
+            const targets = [
+                { x: w * 0.4, y: h * 0.4, label: 'Perseus Radiant (Meteor Peak)' },
+                { x: w * 0.75, y: h * 0.65, label: 'Helix Nebula (Aquarius)' }
+            ];
+
+            targets.forEach(t => {
+                ctx.beginPath();
+                ctx.arc(t.x, t.y, 6, 0, Math.PI * 2);
+                ctx.strokeStyle = '#70d6ff';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(t.x, t.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = '#70d6ff';
+                ctx.fill();
+
+                ctx.fillStyle = '#70d6ff';
+                ctx.font = '11px Segoe UI';
+                ctx.fillText(t.label, t.x + 10, t.y + 4);
+            });
         }
 
         function setUnit(unit) {
@@ -672,7 +1178,7 @@
                 return;
             }
 
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,dew_point_2m,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,visibility,uv_index&hourly=temperature_2m,weather_code,relative_humidity_2m,cloud_cover&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&warnings=true`;
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,dew_point_2m,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,visibility,uv_index&hourly=temperature_2m,weather_code,relative_humidity_2m,cloud_cover&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&warnings=true`;
             
             try {
                 const res = await fetch(url);
@@ -680,7 +1186,7 @@
 
                 const nowIso = new Date().toISOString().slice(0, 13);
                 const foundIdx = rawWeatherData.hourly.time.findIndex(t => t.startsWith(nowIso));
-                activeCloudIndex = foundIdx !== -1 ? foundIdx : 5;
+                activeCloudIndex = foundIdx !== -1 ? foundIdx : 12;
 
                 localStorage.setItem('chevron_weather_cache', JSON.stringify({
                     data: rawWeatherData,
@@ -704,7 +1210,7 @@
                 rawWeatherData = parsed.data;
                 currentCoords = parsed.coords;
                 currentCityName = parsed.cityName;
-                activeCloudIndex = parsed.activeIndex || 5;
+                activeCloudIndex = parsed.activeIndex || 12;
                 
                 document.getElementById('cityName').innerText = `${currentCityName} (Cached)`;
                 renderWeatherUI(rawWeatherData);
@@ -749,6 +1255,13 @@
             document.getElementById('pressure').innerText = `${Math.round(c.surface_pressure)} hPa`;
             document.getElementById('dew').innerText = convertTemp(c.dew_point_2m);
 
+            // Sunrise & Sunset render
+            if (data.daily.sunrise && data.daily.sunrise[0]) {
+                const sunriseTime = new Date(data.daily.sunrise[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const sunsetTime = new Date(data.daily.sunset[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                document.getElementById('sunTimesVal').innerText = `🌅 ${sunriseTime} / 🌇 ${sunsetTime}`;
+            }
+
             const logo = document.getElementById('chevronLogo');
             const alertBox = document.getElementById('alertBox');
             let isTornadoAlert = false;
@@ -780,7 +1293,7 @@
             }
 
             renderAnimatedIcon(c.weather_code);
-            renderCloudWatchScroller();
+            renderFullDayCloudWatchScroller();
 
             const dailyContainer = document.getElementById('dailyList');
             dailyContainer.innerHTML = '';
@@ -797,19 +1310,19 @@
             }
         }
 
-        function renderCloudWatchScroller() {
+        function renderFullDayCloudWatchScroller() {
             if (!rawWeatherData || !rawWeatherData.hourly) return;
             const hourly = rawWeatherData.hourly;
             const container = document.getElementById('hourlyList');
             container.innerHTML = '';
 
-            if (activeCloudIndex < 5) activeCloudIndex = 5;
-            if (activeCloudIndex > hourly.time.length - 6) activeCloudIndex = hourly.time.length - 6;
+            const startHour = 0;
+            const endHour = Math.min(23, hourly.time.length - 1);
 
-            const startIndex = activeCloudIndex - 5;
-            const endIndex = activeCloudIndex + 5;
+            if (activeCloudIndex < startHour) activeCloudIndex = startHour;
+            if (activeCloudIndex > endHour) activeCloudIndex = endHour;
 
-            for (let i = startIndex; i <= endIndex; i++) {
+            for (let i = startHour; i <= endHour; i++) {
                 const timeStr = new Date(hourly.time[i]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
                 const code = hourly.weather_code[i];
                 const cloudCover = hourly.cloud_cover ? hourly.cloud_cover[i] : '--';
@@ -825,28 +1338,32 @@
             }
 
             document.getElementById('selectedHourIndicator').innerText = `${new Date(hourly.time[activeCloudIndex]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` + (activeCloudIndex === getRealCurrentIndex() ? ' (Current)' : '');
+            
+            updateRadarForSelectedHour();
         }
 
         function getRealCurrentIndex() {
-            if (!rawWeatherData) return 5;
+            if (!rawWeatherData) return 12;
             const nowIso = new Date().toISOString().slice(0, 13);
             const found = rawWeatherData.hourly.time.findIndex(t => t.startsWith(nowIso));
-            return found !== -1 ? found : 5;
+            return found !== -1 ? found : 12;
         }
 
         function shiftCloudWatch(direction) {
             activeCloudIndex += direction;
-            renderCloudWatchScroller();
+            if (activeCloudIndex < 0) activeCloudIndex = 0;
+            if (activeCloudIndex > 23) activeCloudIndex = 23;
+            renderFullDayCloudWatchScroller();
         }
 
         function resetToCurrentHour() {
             activeCloudIndex = getRealCurrentIndex();
-            renderCloudWatchScroller();
+            renderFullDayCloudWatchScroller();
         }
 
         function selectCloudHour(index) {
             activeCloudIndex = index;
-            renderCloudWatchScroller();
+            renderFullDayCloudWatchScroller();
         }
 
         function toggleMapFullscreen() {
@@ -868,16 +1385,17 @@
             if (!map) {
                 map = new maplibregl.Map({
                     container: 'map',
-                    style: 'https://tiles.openfreemap.org/styles/dark', // Sleek vector Dark Mode basemap
+                    style: 'https://tiles.openfreemap.org/styles/dark',
                     center: [lon, lat],
                     zoom: 6,
-                    maxZoom: 22
+                    minZoom: 1,
+                    maxZoom: 24
                 });
 
                 map.addControl(new maplibregl.NavigationControl(), 'top-right');
 
                 map.on('load', async () => {
-                    await addRadarAndMarker(lat, lon);
+                    await loadRadarFramesAndSetup(lat, lon);
                 });
             } else {
                 map.flyTo({ center: [lon, lat], zoom: 6 });
@@ -903,7 +1421,7 @@
             }
         }
 
-        async function addRadarAndMarker(lat, lon) {
+        async function loadRadarFramesAndSetup(lat, lon) {
             updateLocationMarker(lat, lon);
 
             if (!navigator.onLine) return;
@@ -912,31 +1430,44 @@
                 const radarRes = await fetch('https://api.rainviewer.com/public/weather-maps.json');
                 const radarData = await radarRes.json();
                 
-                if (radarData && radarData.radar && radarData.radar.past) {
-                    const latestFrame = radarData.radar.past[radarData.radar.past.length - 1];
-                    const radarTileUrl = `${radarData.host}${latestFrame.path}/256/{z}/{x}/{y}/2/1_1.png`;
-
-                    if (map.getSource('radar-source')) {
-                        map.getSource('radar-source').setUrl(radarTileUrl);
-                    } else {
-                        map.addSource('radar-source', {
-                            type: 'raster',
-                            tiles: [radarTileUrl],
-                            tileSize: 256
-                        });
-
-                        map.addLayer({
-                            id: 'radar-layer',
-                            type: 'raster',
-                            source: 'radar-source',
-                            paint: {
-                                'raster-opacity': 0.85
-                            }
-                        });
-                    }
+                if (radarData && radarData.radar) {
+                    radarFrames = [...(radarData.radar.past || []), ...(radarData.radar.nowcast || [])];
+                    updateRadarForSelectedHour();
                 }
             } catch (err) {
                 console.error("Radar feed error:", err);
+            }
+        }
+
+        function updateRadarForSelectedHour() {
+            if (!map || radarFrames.length === 0 || !rawWeatherData) return;
+            
+            const totalFrames = radarFrames.length;
+            const frameIndex = Math.floor((activeCloudIndex / 24) * totalFrames);
+            const targetFrame = radarFrames[Math.min(frameIndex, totalFrames - 1)] || radarFrames[radarFrames.length - 1];
+
+            const host = "https://tilecache.rainviewer.com";
+            const radarTileUrl = `${host}${targetFrame.path}/256/{z}/{x}/{y}/2/1_1.png`;
+
+            if (map.getSource('radar-source')) {
+                map.getSource('radar-source').setUrl(radarTileUrl);
+            } else {
+                map.addSource('radar-source', {
+                    type: 'raster',
+                    tiles: [radarTileUrl],
+                    tileSize: 256,
+                    maxzoom: 24
+                });
+
+                map.addLayer({
+                    id: 'radar-layer',
+                    type: 'raster',
+                    source: 'radar-source',
+                    paint: {
+                        'raster-opacity': 0.85,
+                        'raster-resampling': 'linear'
+                    }
+                });
             }
         }
     </script>
