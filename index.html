@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chevron Network | Pure Weather & Tornado Radar</title>
+    <title>Chevron Network | Pure Weather</title>
+    
+    <!-- PNG Favicon Link -->
+    <link rel="icon" type="image/png" href="costume5.png">
+
     <!-- Leaflet CSS for Radar Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <style>
         :root {
             --bg-dark: #0a0a0c;
@@ -43,10 +48,11 @@
 
         .logo-section { display: flex; align-items: center; gap: 15px; }
 
-        /* PURE SVG LOGO WITH WIND ROTATION */
+        /* PNG LOGO WITH WIND ROTATION */
         .logo-svg {
             width: 55px;
             height: 55px;
+            object-fit: contain;
             transition: transform 1s ease-in-out;
             filter: drop-shadow(0 0 8px rgba(255, 42, 42, 0.6));
         }
@@ -186,18 +192,8 @@
 
     <header>
         <div class="logo-section">
-            <!-- PURE SVG CHEVRON LOGO -->
-            <svg id="chevronLogo" class="logo-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                <!-- Outer Circle -->
-                <circle cx="100" cy="100" r="90" fill="none" stroke="#ff2a2a" stroke-width="10"/>
-                <!-- Grid Overlay -->
-                <line x1="40" y1="100" x2="160" y2="100" stroke="#5a0000" stroke-width="6"/>
-                <line x1="100" y1="40" x2="100" y2="160" stroke="#5a0000" stroke-width="6"/>
-                <line x1="55" y1="65" x2="145" y2="135" stroke="#5a0000" stroke-width="4"/>
-                <line x1="55" y1="135" x2="145" y2="65" stroke="#5a0000" stroke-width="4"/>
-                <!-- Pure Chevron Arrow (Points in Wind Direction) -->
-                <path d="M 35,50 L 100,160 L 165,50 L 100,105 Z" fill="#ff2a2a" stroke="#8b0000" stroke-width="4"/>
-            </svg>
+            <!-- Exact PNG Logo with Wind Rotation -->
+            <img id="chevronLogo" class="logo-svg" src="costume5.png" alt="Chevron Network Logo">
 
             <div class="logo-container">
                 <h1>Chevron <span>Network</span></h1>
@@ -406,7 +402,7 @@
             document.getElementById('pressure').innerText = `${Math.round(c.surface_pressure)} hPa`;
             document.getElementById('dew').innerText = `${Math.round(c.dew_point_2m)}°C`;
 
-            // ROTATE LOGO TO POINT IN WIND DIRECTION
+            // ROTATE PNG LOGO TO POINT IN WIND DIRECTION
             const logo = document.getElementById('chevronLogo');
             logo.style.transform = `rotate(${c.wind_direction_10m}deg)`;
 
