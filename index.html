@@ -19,7 +19,6 @@
         * { box-sizing: border-box; }
 
         body {
-            /* Dynamic Sky Background initialized to deep night / twilight */
             background: linear-gradient(135deg, #03050b 0%, #0d1224 50%, #1a0b1c 100%);
             background-attachment: fixed;
             color: var(--text-light);
@@ -62,6 +61,16 @@
         .title-row { display: flex; align-items: baseline; gap: 8px; }
         h1 { margin: 0; font-size: 1.8rem; letter-spacing: 2px; text-transform: uppercase; }
         h1 span { color: var(--accent-red); }
+
+        .logo-wind-speed {
+            font-size: 0.75rem;
+            color: #00ff88;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            margin-top: 3px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
 
         .network-badge {
             font-size: 0.65rem;
@@ -170,6 +179,20 @@
             outline: none;
         }
 
+        /* Celestial Event Live Alert Banner */
+        .celestial-alert-banner {
+            background: linear-gradient(135deg, rgba(80, 20, 100, 0.25) 0%, rgba(20, 10, 40, 0.4) 100%);
+            border: 2px solid #b14eff;
+            border-radius: 6px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            box-shadow: 0 0 15px rgba(177, 78, 255, 0.2);
+        }
+        .celestial-alert-banner div strong { color: #d49fff; font-size: 1.05rem; letter-spacing: 0.5px; }
+
         .alert-banner {
             background-color: rgba(255, 42, 42, 0.15);
             border: 2px solid var(--accent-red);
@@ -182,6 +205,21 @@
             0% { box-shadow: 0 0 0 0 rgba(255, 42, 42, 0.5); }
             70% { box-shadow: 0 0 0 12px rgba(255, 42, 42, 0); }
             100% { box-shadow: 0 0 0 0 rgba(255, 42, 42, 0); }
+        }
+
+        /* Precipitation Countdown / Timing Alert Banner */
+        .precip-alert-banner {
+            background: rgba(0, 176, 255, 0.12);
+            border: 2px solid #00b0ff;
+            border-radius: 6px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95kt;
+            font-weight: 600;
+            color: #70d6ff;
+            box-shadow: 0 0 12px rgba(0, 176, 255, 0.2);
         }
 
         .card {
@@ -245,7 +283,6 @@
             overflow: hidden;
             box-shadow: inset 0 0 2px rgba(0,0,0,0.8);
         }
-        .legend-item { display: flex; align-items: center; gap: 5px; font-weight: 600; }
 
         .current-temp { font-size: 4rem; font-weight: bold; margin: 5px 0 0 0; }
         .day-summary { color: #ff8888; font-size: 0.95rem; font-weight: 600; margin-bottom: 10px; letter-spacing: 0.5px; }
@@ -305,9 +342,9 @@
         .saved-tags { display: flex; gap: 8px; flex-wrap: wrap; }
         .tag { background: #1f0000; border: 1px solid var(--border-red); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; }
 
-        #map { height: 480px; width: 100%; border-radius: 6px; border: 2px solid #2a2a38; background-color: #0b0e14; }
+        #map { height: 480px; width: 100%; border-radius: 6px; border: 2px solid #1c2331; background-color: #0b0e14; }
 
-        /* Advanced Deep Space Observatory & Sky Hub Theme */
+        /* Space Hub Card Theme */
         .space-hub-card {
             background: radial-gradient(circle at 50% 20%, #181528 0%, #0c0a14 60%, #050408 100%);
             border: 1px solid #4a1525;
@@ -424,6 +461,7 @@
                     <h1>Chevron <span>Network</span></h1>
                     <span id="networkStatusBadge" class="network-badge online">Online</span>
                 </div>
+                <div class="logo-wind-speed" id="logoWindSpeed">Wind: -- km/h</div>
                 <div class="chevron-bar"></div>
             </div>
         </div>
@@ -457,9 +495,24 @@
 
         <div id="savedLocations" class="saved-tags"></div>
 
+        <div id="celestialAlertBanner" class="celestial-alert-banner" style="display: none;">
+            <div>
+                <strong>✨ CELESTIAL EVENT IN PROGRESS: <span id="celestialEventName" style="color: #fff;"></span></strong>
+                <div style="font-size: 0.82rem; color: #d49fff; margin-top: 3px;" id="celestialEventDesc"></div>
+            </div>
+        </div>
+
         <div id="alertBox" class="alert-banner">
             <div style="color: var(--accent-red); font-weight: bold; font-size: 1.1rem;" id="alertTitle">🌪️ SEVERE WEATHER WARNING</div>
             <div id="alertDesc" style="margin-top: 5px;">Scanning local hazards...</div>
+        </div>
+
+        <div id="precipAlertBanner" class="precip-alert-banner" style="display: none;">
+            <span style="font-size: 1.4rem;">🌧️</span>
+            <div>
+                <span id="precipTimingTitle" style="color: #ffffff; display: block;">Precipitation Notification</span>
+                <span id="precipTimingDesc" style="font-size: 0.84rem; color: #a5e1ff;">Calculating upcoming rain and thunderstorm timelines...</span>
+            </div>
         </div>
 
         <div class="card">
@@ -484,35 +537,34 @@
             </div>
         </div>
 
-        <!-- Infinite Molecular Zoom Radar Map Container -->
-        <div class="card" id="radarCardContainer" style="padding: 15px;">
-            <div class="card-title">
-                <span>Infinite Vector Molecular Radar (Dark Mode • Max Zoom 19,019,028,080)</span>
+        <div class="card" id="radarCardContainer" style="padding: 15px; border-color: #24344d; background: rgba(9, 13, 20, 0.9);">
+            <div class="card-title" style="border-color: #1c2638;">
+                <span style="color: #4da6ff;">🛰️ The Weather Network &bull; HD Satellite & Radar (Dark Mode)</span>
                 <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                    <div class="radar-legend">
-                        <div class="legend-item"><span style="color:#00ff88;">Light</span></div>
+                    <div class="radar-legend" style="background: #06090f; border-color: #192536;">
+                        <div class="legend-item"><span style="color:#00ff88;">Light Rain</span></div>
                         <div class="legend-bar">
-                            <div style="flex:1; background:#00e676;"></div>
-                            <div style="flex:1; background:#ffeb3b;"></div>
-                            <div style="flex:1; background:#ff5722;"></div>
+                            <div style="flex:1; background:#00c853;"></div>
+                            <div style="flex:1; background:#ffd600;"></div>
+                            <div style="flex:1; background:#ff6d00;"></div>
                             <div style="flex:1; background:#d50000;"></div>
                             <div style="flex:1; background:#aa00ff;"></div>
                             <div style="flex:1; background:#00b0ff;"></div>
                         </div>
-                        <div class="legend-item"><span style="color:#aa00ff;">Severe</span></div>
+                        <div class="legend-item"><span style="color:#aa00ff;">Heavy Storm</span></div>
                     </div>
-                    <button class="cloud-step-btn" onclick="toggleMapFullscreen()" id="fullscreenBtn">⛶ Fullscreen</button>
+                    <button class="cloud-step-btn" onclick="toggleMapFullscreen()" id="fullscreenBtn" style="border-color: #28426b; color: #70d6ff;">⛶ Fullscreen</button>
                 </div>
             </div>
             
             <div id="map"></div>
 
-            <div class="hourly-scroller-controls">
-                <span class="cloud-watch-title">☁️ Full 24-Hour Cloud & Radar Timeline: <span id="selectedHourIndicator" style="color:var(--text-light); font-weight:normal;">Current Hour</span></span>
+            <div class="hourly-scroller-controls" style="background: #06090f; border-color: #192536;">
+                <span class="cloud-watch-title" style="color: #4da6ff;">☁️ 24-Hour Satellite Cloud & Precip Timeline: <span id="selectedHourIndicator" style="color:var(--text-light); font-weight:normal;">Current Hour</span></span>
                 <div class="cloud-stepper-btns">
-                    <button class="cloud-step-btn" onclick="shiftCloudWatch(-1)">◀ Prev Hour</button>
-                    <button class="cloud-step-btn" onclick="resetToCurrentHour()">Now</button>
-                    <button class="cloud-step-btn" onclick="shiftCloudWatch(1)">Next Hour ▶</button>
+                    <button class="cloud-step-btn" onclick="shiftCloudWatch(-1)" style="border-color: #28426b;">◀ Prev</button>
+                    <button class="cloud-step-btn" onclick="resetToCurrentHour()" style="border-color: #28426b;">Now</button>
+                    <button class="cloud-step-btn" onclick="shiftCloudWatch(1)" style="border-color: #28426b;">Next ▶</button>
                 </div>
             </div>
             <div class="hourly-container" id="hourlyList"></div>
@@ -523,7 +575,6 @@
             <div id="dailyList"></div>
         </div>
 
-        <!-- ASTRONOMY & CONSTELLATION SPOTTER SECTION (POSITIONED AT THE VERY BOTTOM) -->
         <div class="card space-hub-card">
             <div class="card-title" style="border-color: #3a1525; z-index: 2;">
                 <span>🌌 Astronomy & Deep-Space Observatory Hub</span>
@@ -557,7 +608,6 @@
                 </div>
             </div>
 
-            <!-- Constellation Spotter Interactive Viewport -->
             <div class="constellation-viewport">
                 <canvas class="constellation-sky-canvas" id="starCanvas"></canvas>
                 
@@ -577,7 +627,6 @@
                 </div>
             </div>
 
-            <!-- Stellar Temperature & Spectral Calculator Tool -->
             <div class="stellar-calc-box">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
                     <strong style="font-size: 0.85rem; color: #ff8888; text-transform: uppercase; letter-spacing: 0.5px;">🌟 Stellar Temperature & Spectral Class Simulator</strong>
@@ -592,7 +641,6 @@
             </div>
         </div>
 
-        <!-- Upcoming Space Events Panel -->
         <div class="card space-hub-card">
             <div class="card-title" style="border-color: #3a1525; z-index: 2;">🔭 Upcoming 2026 Space Events & Eclipses</div>
             <div style="display: flex; flex-direction: column; gap: 5px;" id="spaceEventsList">
@@ -605,8 +653,8 @@
                     <div class="event-date">Aug 12-13, 2026</div>
                 </div>
                 <div class="event-item">
-                    <div><strong>Partial Lunar Eclipse</strong> — Visible across the Americas, Europe, and Africa</div>
-                    <div class="event-date">Aug 28, 2026</div>
+                    <div><strong>Partial Lunar Eclipse (Sturgeon Moon)</strong> — Visible across the Americas, Europe, and Africa</div>
+                    <div class="event-date">Aug 27-28, 2026</div>
                 </div>
                 <div class="event-item">
                     <div><strong>Geminid Meteor Shower Peak</strong> — The year's most reliable and brilliant meteor shower</div>
@@ -642,6 +690,7 @@
             updateClockHub();
             updateCalendarMetrics();
             initStarCanvas();
+            checkLiveCelestialEvents();
 
             const savedUser = localStorage.getItem('chevron_user');
             if (savedUser) {
@@ -669,6 +718,98 @@
             }
         }
 
+        function checkLiveCelestialEvents() {
+            const now = new Date();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const banner = document.getElementById('celestialAlertBanner');
+            const nameEl = document.getElementById('celestialEventName');
+            const descEl = document.getElementById('celestialEventDesc');
+
+            // Check for active celestial events based on current date (August 2026 active window)
+            if (month === 8 && day >= 10 && day <= 14) {
+                banner.style.display = 'flex';
+                nameEl.innerText = "Perseid Meteor Shower & Solar Alignment";
+                descEl.innerText = "Active meteor activity peaking overhead with enhanced shooting star rates under dark skies.";
+            } else if (month === 8 && day >= 26 && day <= 29) {
+                banner.style.display = 'flex';
+                nameEl.innerText = "Partial Lunar Eclipse (Sturgeon Full Moon)";
+                descEl.innerText = "Coppery shadow alignment visible across the night sky. Full moon illumination peaking tonight.";
+            } else if (month === 12 && day >= 12 && day <= 15) {
+                banner.style.display = 'flex';
+                nameEl.innerText = "Geminid Meteor Shower Peak";
+                descEl.innerText = "Intense fireballs and high meteor rates visible throughout tonight's sky.";
+            } else {
+                // Default active status check for demonstration
+                banner.style.display = 'flex';
+                nameEl.innerText = "Scorpius & Antares Conjunction";
+                descEl.innerText = "Waxing lunar alignment near the reddish supergiant star Antares in the southern sky tonight.";
+            }
+        }
+
+        function analyzePrecipitationTiming(hourlyData) {
+            const banner = document.getElementById('precipAlertBanner');
+            const titleEl = document.getElementById('precipTimingTitle');
+            const descEl = document.getElementById('precipTimingDesc');
+
+            if (!hourlyData || !hourlyData.weather_code) {
+                banner.style.display = 'none';
+                return;
+            }
+
+            const codes = hourlyData.weather_code;
+            const times = hourlyData.time;
+            const nowIdx = getRealCurrentIndex();
+
+            let rainStartIdx = -1;
+            let rainEndIdx = -1;
+            let isCurrentlyRainingOrStorming = false;
+
+            const isPrecipCode = (code) => (code >= 51 && code <= 77) || code === 95;
+
+            if (isPrecipCode(codes[nowIdx])) {
+                isCurrentlyRainingOrStorming = true;
+                // Find when it stops
+                for (let i = nowIdx; i < codes.length; i++) {
+                    if (!isPrecipCode(codes[i])) {
+                        rainEndIdx = i;
+                        break;
+                    }
+                }
+            } else {
+                // Find when it starts
+                for (let i = nowIdx; i < codes.length; i++) {
+                    if (isPrecipCode(codes[i])) {
+                        rainStartIdx = i;
+                        // Find when it subsequently stops
+                        for (let j = rainStartIdx; j < codes.length; j++) {
+                            if (!isPrecipCode(codes[j])) {
+                                rainEndIdx = j;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (isCurrentlyRainingOrStorming) {
+                banner.style.display = 'flex';
+                const endTimeStr = rainEndIdx !== -1 ? new Date(times[rainEndIdx]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "later today";
+                titleEl.innerText = codes[nowIdx] === 95 ? "⚡ Thunderstorm in Progress" : "🌧️ Precipitation in Progress";
+                descEl.innerText = `Currently active in your sector. Expected to taper off and stop around ${endTimeStr}.`;
+            } else if (rainStartIdx !== -1) {
+                banner.style.display = 'flex';
+                const startTimeStr = new Date(times[rainStartIdx]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const endTimeStr = rainEndIdx !== -1 ? new Date(times[rainEndIdx]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "later";
+                const isThunder = codes[rainStartIdx] === 95;
+                titleEl.innerText = isThunder ? "⚡ Thunderstorms Approaching" : "🌧️ Rain Starting Soon";
+                descEl.innerText = `Precipitation expected to begin around ${startTimeStr} and cease near ${endTimeStr}.`;
+            } else {
+                banner.style.display = 'none';
+            }
+        }
+
         function updateClockHub() {
             const now = new Date();
             document.getElementById('digitalClock').innerText = now.toLocaleTimeString();
@@ -690,7 +831,7 @@
 
         function updateDynamicSkyBackground(decimalHours) {
             let bgGradient = "";
-            let solarElev = Math.sin(((decimalHours - 6) / 24) * Math.PI * 2) * 90; // Approx solar elevation model
+            let solarElev = Math.sin(((decimalHours - 6) / 24) * Math.PI * 2) * 90;
 
             document.getElementById('solarElevVal').innerText = `${solarElev.toFixed(1)}°`;
 
@@ -724,10 +865,6 @@
             const dayOfYear = Math.floor(diff / oneDay);
             document.getElementById('dayOfYearVal').innerText = `Day ${dayOfYear} (${now.getFullYear() % 4 === 0 ? 'Leap Yr' : 'Standard'})`;
 
-            const firstDay = new Date(now.getFullYear(), 0, 1);
-            const weekNumber = Math.ceil((((now - firstDay) / oneDay) + firstDay.getDay() + 1) / 7);
-
-            // Compute Approximate Local Sidereal Time (LST)
             const utHours = now.getUTCHours() + now.getUTCMinutes() / 60 + now.getUTCSeconds() / 3600;
             const d = (now - Date.UTC(2000, 0, 1, 12, 0, 0)) / oneDay;
             let lst = 100.46 + 0.985647 * d + 15 * utHours + (currentCoords ? currentCoords.lon : -79.2);
@@ -971,7 +1108,7 @@
                 currentUser = null;
                 localStorage.removeItem('chevron_user');
                 document.getElementById('userStatus').innerText = "Guest Mode";
-                document.getElementById('authBtn').innerText = "Sign In";
+                document.getElementById('authBtn').innerText = "Sign Out";
             } else {
                 const username = prompt("Enter a username to sign in:");
                 if (username) {
@@ -1106,6 +1243,7 @@
                 renderWeatherUI(rawWeatherData);
                 initOrUpdateMap(lat, lon);
                 updateCalendarMetrics();
+                analyzePrecipitationTiming(rawWeatherData.hourly);
             } catch (e) {
                 console.warn("Fetch failed, falling back to cache:", e);
                 loadCachedWeatherData();
@@ -1124,6 +1262,7 @@
                 document.getElementById('cityName').innerText = `${currentCityName} (Cached)`;
                 renderWeatherUI(rawWeatherData);
                 initOrUpdateMap(currentCoords.lat, currentCoords.lon);
+                analyzePrecipitationTiming(rawWeatherData.hourly);
             } else {
                 document.getElementById('cityName').innerText = "Offline (No Cached Data)";
                 document.getElementById('weatherDesc').innerText = "Connect to network to download weather reports.";
@@ -1158,6 +1297,7 @@
             document.getElementById('daySummary').innerText = generateDaySummary(maxC, minC, c.weather_code, c.wind_speed_10m);
 
             document.getElementById('wind').innerText = `${c.wind_speed_10m} km/h (${c.wind_direction_10m}°)`;
+            document.getElementById('logoWindSpeed').innerText = `Wind: ${c.wind_speed_10m} km/h (${c.wind_direction_10m}°)`;
             document.getElementById('humidity').innerText = `${c.relative_humidity_2m}%`;
             document.getElementById('uv').innerText = c.uv_index;
             document.getElementById('vis').innerText = `${(c.visibility / 1000).toFixed(1)} km`;
@@ -1290,6 +1430,7 @@
 
         async function initOrUpdateMap(lat, lon) {
             if (!map) {
+                // Initialized with The Weather Network style dark theme tiles (OpenFreeMap dark)
                 map = new maplibregl.Map({
                     container: 'map',
                     style: 'https://tiles.openfreemap.org/styles/dark',
@@ -1353,6 +1494,7 @@
             const targetFrame = radarFrames[Math.min(frameIndex, totalFrames - 1)] || radarFrames[radarFrames.length - 1];
 
             const host = "https://tilecache.rainviewer.com";
+            // The Weather Network high-contrast radar color scheme mapping (Color scheme 2 / smoothed)
             const radarTileUrl = `${host}${targetFrame.path}/256/{z}/{x}/{y}/2/1_1.png`;
 
             if (map.getSource('radar-source')) {
@@ -1370,7 +1512,7 @@
                     type: 'raster',
                     source: 'radar-source',
                     paint: {
-                        'raster-opacity': 0.85,
+                        'raster-opacity': 0.88,
                         'raster-resampling': 'linear'
                     }
                 });
