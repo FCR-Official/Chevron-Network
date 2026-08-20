@@ -324,6 +324,13 @@
         .cloud-watch-title { font-size: 0.8rem; color: var(--accent-red); font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; }
         .cloud-stepper-btns { display: flex; gap: 6px; }
         .cloud-step-btn { padding: 4px 10px; font-size: 0.75rem; background: #1a1a24; }
+        .radar-playback-controls {
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+            margin-top: 10px; padding: 8px 10px; background: #06090f;
+            border: 1px solid #192536; border-radius: 6px;
+        }
+        .radar-play-btn { min-width: 78px; font-weight: 700; border-color: #315b8f !important; color: #eaf4ff !important; }
+        .radar-frame-label { font-size: 0.75rem; color: #9fb2c8; margin-left: auto; }
 
         .hourly-container { display: grid; grid-template-columns: repeat(24, minmax(55px, 1fr)); gap: 6px; width: 100%; overflow-x: auto; padding-bottom: 8px; }
         .hourly-card { 
@@ -559,6 +566,14 @@
             
             <div id="map"></div>
 
+            <div class="radar-playback-controls">
+                <button class="cloud-step-btn radar-play-btn" id="radarPlayBtn" onclick="toggleRadarPlayback()">▶ Play</button>
+                <button class="cloud-step-btn" onclick="stepRadarFrame(-1)">◀</button>
+                <button class="cloud-step-btn" onclick="stepRadarFrame(1)">▶</button>
+                <button class="cloud-step-btn" onclick="resetRadarPlayback()">↺ Now</button>
+                <span class="radar-frame-label" id="radarFrameLabel">Radar: Current</span>
+            </div>
+
             <div class="hourly-scroller-controls" style="background: #06090f; border-color: #192536;">
                 <span class="cloud-watch-title" style="color: #4da6ff;">☁️ 24-Hour Satellite Cloud & Precip Timeline: <span id="selectedHourIndicator" style="color:var(--text-light); font-weight:normal;">Current Hour</span></span>
                 <div class="cloud-stepper-btns">
@@ -655,6 +670,9 @@
         let rawWeatherData = null;
         let activeCloudIndex = 0;
         let radarFrames = [];
+        let radarFrameIndex = 0;
+        let radarPlaying = false;
+        let radarPlayTimer = null;
         let currentConstellationMode = 'triangle';
 
         const wmoCodes = {
@@ -1470,7 +1488,7 @@
                     center: [lon, lat],
                     zoom: 6,
                     minZoom: 1,
-                    maxZoom: 18
+                    maxZoom: 101000000100
                 });
 
                 map.addControl(new maplibregl.NavigationControl(), 'top-right');
@@ -1509,35 +1527,34 @@
             try {
                 const radarRes = await fetch('https://api.rainviewer.com/public/weather-maps.json');
                 const radarData = await radarRes.json();
-                
+
                 if (radarData && radarData.radar) {
                     radarFrames = [...(radarData.radar.past || []), ...(radarData.radar.nowcast || [])];
-                    updateRadarForSelectedHour();
+                    // Start on the newest radar frame, like a live radar product.
+                    radarFrameIndex = Math.max(0, (radarData.radar.past || []).length - 1);
+                    updateRadarFrame();
                 }
             } catch (err) {
                 console.error("Radar feed error:", err);
             }
         }
 
-        function updateRadarForSelectedHour() {
-            if (!map || radarFrames.length === 0 || !rawWeatherData) return;
-            
-            const totalFrames = radarFrames.length;
-            const frameIndex = Math.floor((activeCloudIndex / 24) * totalFrames);
-            const targetFrame = radarFrames[Math.min(frameIndex, totalFrames - 1)] || radarFrames[radarFrames.length - 1];
+        function updateRadarFrame() {
+            if (!map || radarFrames.length === 0) return;
 
+            radarFrameIndex = Math.max(0, Math.min(radarFrameIndex, radarFrames.length - 1));
+            const targetFrame = radarFrames[radarFrameIndex];
             const host = "https://tilecache.rainviewer.com";
-            // The Weather Network high-contrast radar color scheme mapping (Color scheme 2 / smoothed)
             const radarTileUrl = `${host}${targetFrame.path}/256/{z}/{x}/{y}/2/1_1.png`;
 
             if (map.getSource('radar-source')) {
-                map.getSource('radar-source').setUrl(radarTileUrl);
+                map.getSource('radar-source').setTiles([radarTileUrl]);
             } else {
                 map.addSource('radar-source', {
                     type: 'raster',
                     tiles: [radarTileUrl],
                     tileSize: 256,
-                    maxzoom: 18
+                    maxzoom: 101000000100
                 });
 
                 map.addLayer({
@@ -1545,10 +1562,56 @@
                     type: 'raster',
                     source: 'radar-source',
                     paint: {
-                        'raster-opacity': 0.88,
+                        'raster-opacity': 0.90,
                         'raster-resampling': 'linear'
                     }
                 });
+            }
+
+            const pastCount = radarFrames.length;
+            const frame = targetFrame;
+            const timestamp = frame.time ? new Date(frame.time * 1000) : null;
+            const label = timestamp
+                ? timestamp.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
+                : `Frame ${radarFrameIndex + 1}`;
+            document.getElementById('radarFrameLabel').innerText =
+                `${radarFrameIndex >= Math.max(0, pastCount - ((radarFrames.length - pastCount) || 1)) ? 'Radar' : 'Radar'}: ${label}`;
+        }
+
+        function stepRadarFrame(direction) {
+            if (!radarFrames.length) return;
+            radarPlaying = false;
+            clearInterval(radarPlayTimer);
+            radarPlayTimer = null;
+            document.getElementById('radarPlayBtn').innerText = '▶ Play';
+            radarFrameIndex = (radarFrameIndex + direction + radarFrames.length) % radarFrames.length;
+            updateRadarFrame();
+        }
+
+        function resetRadarPlayback() {
+            if (!radarFrames.length) return;
+            radarPlaying = false;
+            clearInterval(radarPlayTimer);
+            radarPlayTimer = null;
+            document.getElementById('radarPlayBtn').innerText = '▶ Play';
+            radarFrameIndex = Math.max(0, radarFrames.length - 1);
+            updateRadarFrame();
+        }
+
+        function toggleRadarPlayback() {
+            if (!radarFrames.length) return;
+            radarPlaying = !radarPlaying;
+            const btn = document.getElementById('radarPlayBtn');
+            clearInterval(radarPlayTimer);
+
+            if (radarPlaying) {
+                btn.innerText = '❚❚ Pause';
+                radarPlayTimer = setInterval(() => {
+                    radarFrameIndex = (radarFrameIndex + 1) % radarFrames.length;
+                    updateRadarFrame();
+                }, 700);
+            } else {
+                btn.innerText = '▶ Play';
             }
         }
     </script>
