@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chevron Network | Pure Weather</title>
+    <title>Chevron Network | Pure Weather & Tornado Radar</title>
     
     <!-- PNG Favicon Link -->
     <link rel="icon" type="image/png" href="costume5.png">
@@ -32,6 +32,7 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden; /* Prevent body horizontal scroll */
         }
 
         /* Header UI */
@@ -48,7 +49,6 @@
 
         .logo-section { display: flex; align-items: center; gap: 15px; }
 
-        /* PNG LOGO WITH WIND ROTATION */
         .logo-svg {
             width: 55px;
             height: 55px;
@@ -78,11 +78,11 @@
             box-shadow: 0 0 10px rgba(255, 42, 42, 0.5);
         }
 
-        /* Dashboard Layout */
+        /* Main Container - Fully Constrained No-Scroll */
         main {
             width: 95%;
-            max-width: 1200px;
-            margin: 25px 0;
+            max-width: 1100px;
+            margin: 25px auto;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -100,7 +100,6 @@
             outline: none;
         }
 
-        /* Weather Alert & Tornado Banners */
         .alert-banner {
             background-color: rgba(255, 42, 42, 0.15);
             border: 2px solid var(--accent-red);
@@ -115,19 +114,13 @@
             100% { box-shadow: 0 0 0 0 rgba(255, 42, 42, 0); }
         }
 
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1fr 1.3fr;
-            gap: 20px;
-        }
-        @media (max-width: 900px) { .grid-layout { grid-template-columns: 1fr; } }
-
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-red);
             border-radius: 6px;
             padding: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            width: 100%;
         }
 
         .card-title {
@@ -142,14 +135,17 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        /* Radar Legend for Rain/Ice/Snow */
+        /* Radar Legend */
         .radar-legend {
             display: flex;
             gap: 10px;
             font-size: 0.75rem;
             color: var(--text-dim);
+            flex-wrap: wrap;
         }
         .legend-item { display: flex; align-items: center; gap: 4px; }
         .legend-color { width: 12px; height: 12px; border-radius: 2px; }
@@ -165,21 +161,47 @@
         .rain-drop { position: absolute; background: #ff2a2a; width: 3px; height: 12px; border-radius: 2px; animation: fallRain 1.2s infinite linear; }
         @keyframes fallRain { 0% { top: 0px; opacity: 1; } 100% { top: 40px; opacity: 0; } }
 
-        /* Details Grid */
-        .details-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #2a2a30; }
+        /* Details Grid - Fully Responsive */
+        .details-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
+            gap: 15px; 
+            margin-top: 20px; 
+            padding-top: 15px; 
+            border-top: 1px solid #2a2a30; 
+        }
         .detail-item span { display: block; font-size: 0.8rem; color: var(--text-dim); }
         .detail-item strong { font-size: 1.1rem; }
 
-        .hourly-container { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; }
-        .hourly-card { min-width: 75px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 4px; text-align: center; border: 1px solid #2a2a30; }
-        .daily-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #2a2a30; }
+        /* Hourly Forecast Grid (No Horizontal Scroll) */
+        .hourly-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); 
+            gap: 8px; 
+            width: 100%;
+        }
+        .hourly-card { 
+            background: rgba(255,255,255,0.03); 
+            padding: 8px 4px; 
+            border-radius: 4px; 
+            text-align: center; 
+            border: 1px solid #2a2a30; 
+        }
+
+        .daily-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 12px 0; 
+            border-bottom: 1px solid #2a2a30; 
+        }
 
         .saved-tags { display: flex; gap: 8px; flex-wrap: wrap; }
         .tag { background: #1f0000; border: 1px solid var(--border-red); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; }
 
-        /* EXPANDED RADAR SIZE */
+        /* Radar Map Element */
         #map { 
-            height: 550px; 
+            height: 500px; 
             width: 100%; 
             border-radius: 6px;
             border: 2px solid var(--border-red);
@@ -192,7 +214,6 @@
 
     <header>
         <div class="logo-section">
-            <!-- Exact PNG Logo with Wind Rotation -->
             <img id="chevronLogo" class="logo-svg" src="costume5.png" alt="Chevron Network Logo">
 
             <div class="logo-container">
@@ -222,56 +243,52 @@
             <div id="alertDesc" style="margin-top: 5px;">Scanning local hazards...</div>
         </div>
 
-        <div class="grid-layout">
-            <!-- Left Panel -->
-            <div style="display: flex; flex-direction: column; gap: 20px;">
-                <div class="card">
-                    <div class="card-title">Current Radar Station</div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <h2 id="cityName" style="margin: 0;">Detecting Location...</h2>
-                            <div id="weatherDesc" style="color: var(--text-dim);">Scanning atmosphere...</div>
-                            <div class="current-temp" id="temp">--°C</div>
-                        </div>
-                        <div class="icon-box" id="animatedIcon"></div>
-                    </div>
-
-                    <div class="details-grid">
-                        <div class="detail-item"><span>Wind Vector</span><strong id="wind">-- km/h</strong></div>
-                        <div class="detail-item"><span>Humidity</span><strong id="humidity">--%</strong></div>
-                        <div class="detail-item"><span>UV Index</span><strong id="uv">--</strong></div>
-                        <div class="detail-item"><span>Visibility</span><strong id="vis">-- km</strong></div>
-                        <div class="detail-item"><span>Pressure</span><strong id="pressure">-- hPa</strong></div>
-                        <div class="detail-item"><span>Dew Point</span><strong id="dew">--°C</strong></div>
-                    </div>
+        <!-- 1. Current Weather Panel -->
+        <div class="card">
+            <div class="card-title">Current Radar Station</div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2 id="cityName" style="margin: 0;">Detecting Location...</h2>
+                    <div id="weatherDesc" style="color: var(--text-dim);">Scanning atmosphere...</div>
+                    <div class="current-temp" id="temp">--°C</div>
                 </div>
-
-                <div class="card">
-                    <div class="card-title">24-Hour Forecast</div>
-                    <div class="hourly-container" id="hourlyList"></div>
-                </div>
-
-                <div class="card">
-                    <div class="card-title">7-Day Extended Forecast</div>
-                    <div id="dailyList"></div>
-                </div>
+                <div class="icon-box" id="animatedIcon"></div>
             </div>
 
-            <!-- Right Panel (Expanded Doppler Radar) -->
-            <div style="display: flex; flex-direction: column; gap: 20px;">
-                <div class="card" style="padding: 15px;">
-                    <div class="card-title">
-                        <span>Expanded Doppler Radar</span>
-                        <div class="radar-legend">
-                            <div class="legend-item"><div class="legend-color" style="background:#00ff00;"></div> Rain</div>
-                            <div class="legend-item"><div class="legend-color" style="background:#ff0000;"></div> Heavy/Storm</div>
-                            <div class="legend-item"><div class="legend-color" style="background:#a000ff;"></div> Ice/Sleet</div>
-                            <div class="legend-item"><div class="legend-color" style="background:#00d0ff;"></div> Snow</div>
-                        </div>
-                    </div>
-                    <div id="map"></div>
+            <div class="details-grid">
+                <div class="detail-item"><span>Wind Vector</span><strong id="wind">-- km/h</strong></div>
+                <div class="detail-item"><span>Humidity</span><strong id="humidity">--%</strong></div>
+                <div class="detail-item"><span>UV Index</span><strong id="uv">--</strong></div>
+                <div class="detail-item"><span>Visibility</span><strong id="vis">-- km</strong></div>
+                <div class="detail-item"><span>Pressure</span><strong id="pressure">-- hPa</strong></div>
+                <div class="detail-item"><span>Dew Point</span><strong id="dew">--°C</strong></div>
+            </div>
+        </div>
+
+        <!-- 2. Radar Map (Positioned Under Weather, Above 7-Day Forecast) -->
+        <div class="card" style="padding: 15px;">
+            <div class="card-title">
+                <span>Expanded Doppler Radar</span>
+                <div class="radar-legend">
+                    <div class="legend-item"><div class="legend-color" style="background:#00ff00;"></div> Rain</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#ff0000;"></div> Heavy/Storm</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#a000ff;"></div> Ice/Sleet</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#00d0ff;"></div> Snow</div>
                 </div>
             </div>
+            <div id="map"></div>
+        </div>
+
+        <!-- 3. 24-Hour Forecast Panel -->
+        <div class="card">
+            <div class="card-title">24-Hour Forecast</div>
+            <div class="hourly-container" id="hourlyList"></div>
+        </div>
+
+        <!-- 4. 7-Day Extended Forecast Panel -->
+        <div class="card">
+            <div class="card-title">7-Day Extended Forecast</div>
+            <div id="dailyList"></div>
         </div>
     </main>
 
@@ -279,7 +296,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        let map, currentUser = null, currentCoords = null, currentCityName = "";
+        let map, currentUser = null, currentCoords = null, currentCityName = "", radarLayer = null, locationMarker = null;
 
         const wmoCodes = {
             0: "Clear Sky", 1: "Mainly Clear", 2: "Partly Cloudy", 3: "Overcast",
@@ -432,12 +449,12 @@
                 const hourTime = new Date(data.hourly.time[i]).getHours();
                 hourlyContainer.innerHTML += `
                     <div class="hourly-card">
-                        <div style="font-size:0.8rem; color:var(--text-dim);">${hourTime}:00</div>
-                        <div style="margin:5px 0; font-weight:bold;">${Math.round(data.hourly.temperature_2m[i])}°C</div>
+                        <div style="font-size:0.75rem; color:var(--text-dim);">${hourTime}:00</div>
+                        <div style="margin:3px 0; font-weight:bold; font-size:0.9rem;">${Math.round(data.hourly.temperature_2m[i])}°C</div>
                     </div>`;
             }
 
-            // Populate 7-Day Extended
+            // Populate 7-Day Extended Forecast
             const dailyContainer = document.getElementById('dailyList');
             dailyContainer.innerHTML = '';
             for (let i = 0; i < 7; i++) {
@@ -450,26 +467,51 @@
                     </div>`;
             }
 
-            // Expanded Map Render
+            // Reliable Doppler Radar Initialization
+            initOrUpdateMap(lat, lon);
+        }
+
+        async function initOrUpdateMap(lat, lon) {
             if (!map) {
-                map = L.map('map').setView([lat, lon], 8);
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 18 }).addTo(map);
+                map = L.map('map').setView([lat, lon], 7);
 
-                const radarRes = await fetch('https://api.rainviewer.com/public/weather-maps.json');
-                const radarData = await radarRes.json();
-                const path = radarData.radar.past[radarData.radar.past.length - 1].path;
-                
-                L.tileLayer(`${radarData.host}${path}/256/{z}/{x}/{y}/2/1_1.png`, { opacity: 0.85 }).addTo(map);
-
-                L.circleMarker([lat, lon], {
-                    radius: 8,
-                    fillColor: "#ff2a2a",
-                    color: "#ffffff",
-                    weight: 3,
-                    fillOpacity: 0.9
+                // High contrast Voyager base layer
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { 
+                    maxZoom: 18,
+                    attribution: '&copy; OpenStreetMap'
                 }).addTo(map);
             } else {
-                map.setView([lat, lon], 8);
+                map.setView([lat, lon], 7);
+            }
+
+            // Update Target Location Circle Marker
+            if (locationMarker) map.removeLayer(locationMarker);
+            locationMarker = L.circleMarker([lat, lon], {
+                radius: 9,
+                fillColor: "#ff2a2a",
+                color: "#ffffff",
+                weight: 3,
+                fillOpacity: 1
+            }).addTo(map);
+
+            // Fetch Live RainViewer Overlay Timestamp
+            try {
+                const radarRes = await fetch('https://api.rainviewer.com/public/weather-maps.json');
+                const radarData = await radarRes.json();
+                
+                if (radarData && radarData.radar && radarData.radar.past) {
+                    const latestFrame = radarData.radar.past[radarData.radar.past.length - 1];
+                    
+                    if (radarLayer) map.removeLayer(radarLayer);
+
+                    // Smooth Color Doppler Radar Overlay
+                    radarLayer = L.tileLayer(`${radarData.host}${latestFrame.path}/256/{z}/{x}/{y}/2/1_1.png`, {
+                        opacity: 0.75,
+                        maxZoom: 18
+                    }).addTo(map);
+                }
+            } catch (err) {
+                console.error("Radar feed initialization error:", err);
             }
         }
     </script>
