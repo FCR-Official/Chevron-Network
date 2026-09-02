@@ -441,6 +441,40 @@
         .stellar-slider-row { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
         .stellar-slider { flex: 1; accent-color: var(--accent-red); cursor: pointer; }
 
+        /* Live Sun Position arc */
+        .sun-arc-box {
+            background: rgba(13, 14, 18, 0.88);
+            border: 1px solid #3a1a2b;
+            border-radius: 6px;
+            padding: 15px 15px 10px 15px;
+            margin-top: 15px;
+            position: relative;
+            z-index: 2;
+        }
+        .sun-arc-title {
+            font-size: 0.85rem;
+            color: #ff8888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .sun-arc-svg { width: 100%; height: auto; display: block; }
+        #sunArcDot { transition: cx 0.6s linear, cy 0.6s linear, fill 0.6s ease; filter: drop-shadow(0 0 6px rgba(255, 170, 0, 0.8)); }
+        .sun-arc-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        .rain-chance-pill {
+            font-size: 0.6rem;
+            color: #4da6ff;
+            font-weight: bold;
+        }
+
         .event-item {
             display: flex;
             justify-content: space-between;
@@ -536,6 +570,7 @@
 
             <div class="details-grid">
                 <div class="detail-item"><span>Wind Vector</span><strong id="wind">-- km/h</strong></div>
+                <div class="detail-item"><span>Chance of Rain</span><strong id="rainChance">--%</strong></div>
                 <div class="detail-item"><span>Humidity</span><strong id="humidity">--%</strong></div>
                 <div class="detail-item"><span>UV Index</span><strong id="uv">--</strong></div>
                 <div class="detail-item"><span>Visibility</span><strong id="vis">-- km</strong></div>
@@ -610,6 +645,10 @@
                     <strong id="solarElevVal">--</strong>
                 </div>
                 <div class="astro-card">
+                    <span>Solar Azimuth</span>
+                    <strong id="solarAzimuthVal">--</strong>
+                </div>
+                <div class="astro-card">
                     <span>Twilight Stage</span>
                     <strong id="twilightStageVal">--</strong>
                 </div>
@@ -620,6 +659,20 @@
                 <div class="astro-card">
                     <span>Calendar Metrics</span>
                     <strong id="dayOfYearVal" style="font-size: 0.95rem;">--</strong>
+                </div>
+            </div>
+
+            <div class="sun-arc-box" id="sunArcBox">
+                <div class="sun-arc-title">☀️ Live Sun Position <span id="sunArcStatus" style="color: var(--text-dim); font-weight: normal; text-transform: none; letter-spacing: 0;"></span></div>
+                <svg viewBox="0 0 300 110" class="sun-arc-svg" id="sunArcSvg" preserveAspectRatio="xMidYMid meet">
+                    <line x1="8" y1="100" x2="292" y2="100" stroke="#2a1a20" stroke-width="1.5" stroke-dasharray="3 4"></line>
+                    <path d="M8,100 A140,70 0 0,1 292,100" stroke="#3a2035" stroke-width="2" fill="none"></path>
+                    <circle id="sunArcDot" cx="8" cy="100" r="7" fill="#ffaa00"></circle>
+                </svg>
+                <div class="sun-arc-labels">
+                    <span>🌅 <span id="sunArcRise">--</span></span>
+                    <span id="sunArcAzimuth" style="color: var(--text-dim);">Azimuth --°</span>
+                    <span>🌇 <span id="sunArcSet">--</span></span>
                 </div>
             </div>
 
@@ -1274,7 +1327,7 @@
                 return;
             }
 
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,dew_point_2m,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,visibility,uv_index&hourly=temperature_2m,weather_code,relative_humidity_2m,cloud_cover&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&warnings=true`;
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,dew_point_2m,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,visibility,uv_index&hourly=temperature_2m,weather_code,relative_humidity_2m,cloud_cover,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&warnings=true`;
             
             try {
                 const res = await fetch(url);
