@@ -488,6 +488,232 @@
     }
     body.night-mobile #compassFab { display: inline-flex; }
 
+  
+    /* ===== SIMPLE MODE / AI / STORM ===== */
+    /* Simple mode only emphasizes hub — all sections stay available */
+    body.simple-mode #simpleHub { display: block; }
+    body.pro-mode #simpleHub { display: block; opacity: 0.95; }
+    body.simple-mode .section-nav { max-height: 72px; }
+
+    #simpleHub {
+      display: none;
+      max-width: 720px;
+      margin: 0 auto 16px;
+      padding: 0 16px;
+    }
+    .simple-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+    .simple-temp {
+      font-size: clamp(3rem, 12vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1;
+      font-family: var(--mono);
+    }
+    .simple-line { font-size: 1.15rem; color: var(--text-muted); margin-top: 8px; }
+    .simple-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .simple-actions .btn { width: 100%; justify-content: center; min-height: 52px; font-size: 1rem; }
+    .simple-actions .btn-span { grid-column: 1 / -1; }
+
+    #stormBanner {
+      display: none;
+      position: sticky;
+      top: 64px;
+      z-index: 95;
+      margin: 0 auto 12px;
+      max-width: 1200px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, rgba(255,42,42,.95), rgba(180,20,20,.9));
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 8px 32px rgba(255,42,42,.35);
+      animation: stormPulse 1.6s ease-in-out infinite;
+    }
+    #stormBanner.show { display: block; }
+    @keyframes stormPulse {
+      0%, 100% { box-shadow: 0 8px 32px rgba(255,42,42,.35); }
+      50% { box-shadow: 0 8px 48px rgba(255,42,42,.55); }
+    }
+    body.perf-low #stormBanner { animation: none; }
+
+    #aiDock {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      z-index: 300;
+      background: rgba(6,8,15,.96);
+      border-top: 2px solid var(--border-strong);
+      padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+      backdrop-filter: blur(12px);
+    }
+    body.perf-low #aiDock { backdrop-filter: none; background: #0a0c14; }
+    #aiDockInner { max-width: 900px; margin: 0 auto; }
+    #aiLog {
+      max-height: 140px;
+      overflow-y: auto;
+      font-size: .88rem;
+      margin-bottom: 8px;
+      display: none;
+    }
+    #aiLog.open { display: block; }
+    #aiLog .ai-msg { margin: 4px 0; padding: 8px 10px; border-radius: 10px; }
+    #aiLog .ai-user { background: rgba(255,255,255,.06); }
+    #aiLog .ai-bot { background: rgba(255,42,42,.12); border: 1px solid rgba(255,42,42,.25); }
+    #aiRow { display: flex; gap: 8px; }
+    #aiInput {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.15);
+      background: rgba(0,0,0,.4);
+      color: var(--text);
+      font-size: 1rem;
+      font-family: var(--font);
+    }
+    #aiInput:focus { outline: none; border-color: var(--accent); }
+    main { padding-bottom: 100px !important; }
+
+    .mode-toggle-bar {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      max-width: 1200px; margin: 8px auto; padding: 0 16px;
+      align-items: center;
+    }
+    .radar-timeline {
+      display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap;
+    }
+    .radar-timeline input[type=range] { flex: 1; min-width: 140px; }
+    .frame-chip {
+      font-size: .75rem; color: var(--text-dim); font-family: var(--mono);
+    }
+
+  
+    /* Sky-driven theme variables (updated live by JS) */
+    :root {
+      --sky-top: #06080f;
+      --sky-mid: #0e1220;
+      --sky-bot: #0a0c14;
+      --sky-accent: #ff2a2a;
+      --sky-glow: rgba(255,42,42,0.35);
+      --sky-card: rgba(14,18,32,0.82);
+      --sky-text: #f2f3f7;
+    }
+    body {
+      background: linear-gradient(135deg, var(--sky-top) 0%, var(--sky-mid) 45%, var(--sky-bot) 100%) !important;
+      background-attachment: fixed !important;
+      color: var(--sky-text);
+    }
+    .card, .simple-card, #aiDock {
+      background: var(--sky-card) !important;
+      border-color: color-mix(in srgb, var(--sky-accent) 35%, transparent) !important;
+    }
+    .btn-primary, .cn-badge, .status-pill.online .dot {
+      background: var(--sky-accent) !important;
+      border-color: var(--sky-accent) !important;
+      box-shadow: 0 4px 20px var(--sky-glow) !important;
+    }
+    header {
+      border-bottom-color: var(--sky-accent) !important;
+      box-shadow: 0 4px 24px var(--sky-glow) !important;
+    }
+    .section-nav a:hover, .section-nav a.active {
+      border-color: var(--sky-accent) !important;
+      background: color-mix(in srgb, var(--sky-accent) 18%, transparent) !important;
+    }
+
+    /* Animated weather icons (CSS — works offline, no emoji) */
+    .wx {
+      display: inline-block;
+      width: 48px; height: 48px;
+      position: relative;
+      vertical-align: middle;
+    }
+    .wx-lg { width: 88px; height: 88px; }
+    .wx-sm { width: 28px; height: 28px; }
+    .wx-sun {
+      background: radial-gradient(circle at 50% 50%, #ffe566 0%, #ffaa00 55%, transparent 60%);
+      border-radius: 50%;
+      box-shadow: 0 0 20px #ffaa00;
+      animation: wxPulse 3s ease-in-out infinite;
+    }
+    .wx-sun::after {
+      content: "";
+      position: absolute; inset: -8px;
+      background: conic-gradient(from 0deg, transparent, rgba(255,170,0,.35), transparent 30%);
+      border-radius: 50%;
+      animation: wxSpin 12s linear infinite;
+    }
+    .wx-cloud {
+      background: linear-gradient(180deg, #c5c9d6 0%, #8b90a5 100%);
+      border-radius: 20px;
+      width: 70%; height: 40%;
+      left: 15%; top: 40%;
+      position: absolute;
+      animation: wxDrift 4s ease-in-out infinite;
+      box-shadow: 12px -10px 0 -2px #aeb2c0, -14px -6px 0 -4px #9aa0b4;
+    }
+    .wx-rain .wx-cloud { top: 20%; }
+    .wx-rain::before, .wx-rain::after {
+      content: "";
+      position: absolute;
+      width: 3px; height: 12px;
+      background: #40c4ff;
+      border-radius: 2px;
+      animation: wxFall 0.9s linear infinite;
+      top: 60%; left: 35%;
+    }
+    .wx-rain::after { left: 55%; animation-delay: .3s; height: 10px; }
+    .wx-snow .wx-cloud { top: 18%; background: #d0d4e0; }
+    .wx-snow::before, .wx-snow::after {
+      content: "❄";
+      position: absolute;
+      color: #e8eeff;
+      font-size: 12px;
+      top: 55%; left: 30%;
+      animation: wxFall 1.4s linear infinite;
+    }
+    .wx-snow::after { left: 55%; animation-delay: .5s; font-size: 10px; }
+    .wx-storm .wx-cloud { background: #5a5f73; top: 18%; }
+    .wx-storm::before {
+      content: "";
+      position: absolute;
+      width: 10px; height: 22px;
+      left: 48%; top: 55%;
+      background: #ffe566;
+      clip-path: polygon(40% 0, 100% 0, 55% 45%, 80% 45%, 0 100%, 35% 50%, 15% 50%);
+      animation: wxFlash 1.2s ease-in-out infinite;
+    }
+    .wx-fog {
+      background: repeating-linear-gradient(90deg, #888 0 8px, transparent 8px 16px);
+      opacity: 0.7;
+      height: 40%;
+      top: 35%;
+      position: absolute;
+      left: 10%; right: 10%;
+      animation: wxDrift 5s ease-in-out infinite;
+      border-radius: 4px;
+    }
+    .wx-partly .wx-sun { width: 55%; height: 55%; top: 5%; right: 5%; position: absolute; }
+    .wx-partly .wx-cloud { width: 65%; }
+    @keyframes wxPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+    @keyframes wxSpin { to { transform: rotate(360deg); } }
+    @keyframes wxDrift { 0%,100%{transform:translateX(0)} 50%{transform:translateX(4px)} }
+    @keyframes wxFall { 0%{transform:translateY(0);opacity:1} 100%{transform:translateY(14px);opacity:0} }
+    @keyframes wxFlash { 0%,100%{opacity:1} 50%{opacity:.3} }
+    body.perf-low .wx-sun::after, body.perf-low .wx { animation: none !important; }
+
+    .hero-icon { display:flex; align-items:center; justify-content:center; min-width: 96px; }
+    .hour-chip .h-icon, .day-icon { display:flex; align-items:center; justify-content:center; }
+
   </style>
 </head>
 <body>
@@ -526,6 +752,34 @@
     </div>
   </header>
 
+  <div id="stormBanner" role="alert" aria-live="assertive"></div>
+
+  <div class="mode-toggle-bar">
+    <button type="button" class="btn btn-primary" id="modeSimpleBtn" onclick="setUiMode('simple')">😊 Simple</button>
+    <button type="button" class="btn btn-ghost" id="modeProBtn" onclick="setUiMode('pro')">🔬 Pro desks</button>
+    <button type="button" class="btn btn-ghost" onclick="document.getElementById('aiInput').focus();document.getElementById('aiLog').classList.add('open')">🤖 Ask CN</button>
+    <span style="font-size:.8rem;color:var(--text-dim)" id="modeHint">Simple = big weather + radar only</span>
+  </div>
+
+  <div id="simpleHub">
+    <div class="simple-card">
+      <div style="font-size:.8rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim)">Right now · <span id="simplePlace">—</span></div>
+      <div class="simple-temp" id="simpleTemp">—</div>
+      <div class="simple-line" id="simpleFeel">Loading…</div>
+      <div class="simple-line" id="simpleExtra" style="font-size:.95rem"></div>
+      <div class="simple-actions">
+        <button type="button" class="btn btn-primary" onclick="goSection('sec-radar')">🛰️ Radar</button>
+        <button type="button" class="btn btn-ghost" onclick="goSection('sec-clothes')">👕 What to wear</button>
+        <button type="button" class="btn btn-ghost btn-span" onclick="askCN('what\'s the weather right now?')">🤖 Tell me the weather</button>
+        <button type="button" class="btn btn-ghost btn-span" onclick="askCN('is a storm coming soon?')">⚠️ Storm check</button>
+      </div>
+    </div>
+    <div class="simple-card" style="font-size:.9rem;color:var(--text-muted)">
+      Type below like you talk: <em>“will it rain?”</em> · <em>“open radar”</em> · <em>“what to wear”</em> · <em>“snow saturday?”</em>
+    </div>
+  </div>
+
+
   <div class="search-bar">
     <input type="text" id="cityInput" placeholder="Search city or lat, lon…" autocomplete="off" spellcheck="false"
            onkeydown="if(event.key==='Enter')searchCity()" />
@@ -546,58 +800,108 @@
     <div class="nav-search-wrap">
     <input type="search" id="navFilter" placeholder="Filter sections… (e.g. radar, moon, clothes)" oninput="filterNav(this.value)" />
   </div>
-  <nav class="section-nav" aria-label="Sections">
-    <a href="#sec-current">1 Now</a>
+      <nav class="section-nav" aria-label="Sections">
+    <a href="#sec-current">1 Current</a>
     <a href="#sec-thermal">2 Thermal</a>
     <a href="#sec-radar">3 Radar</a>
-    <a href="#sec-hourly">4 Next 24h</a>
-    <a href="#sec-daily">5 Week</a>
-    <a href="#sec-precip">6 Rain Lab</a>
+    <a href="#sec-hourly">4 Hourly</a>
+    <a href="#sec-daily">5 Daily</a>
+    <a href="#sec-precip">6 Precip</a>
     <a href="#sec-wind">7 Wind</a>
-    <a href="#sec-aq">8 Air Quality</a>
-    <a href="#sec-health">9 Comfort</a>
-    <a href="#sec-fire">10 Fire Risk</a>
+    <a href="#sec-aq">8 Aq</a>
+    <a href="#sec-health">9 Health</a>
+    <a href="#sec-fire">10 Fire</a>
     <a href="#sec-severe">11 Severe</a>
     <a href="#sec-aviation">12 Aviation</a>
     <a href="#sec-marine">13 Marine</a>
-    <a href="#sec-ag">14 Farming</a>
-    <a href="#sec-photo">15 Photo Light</a>
-    <a href="#sec-clothes">16 What to Wear</a>
+    <a href="#sec-ag">14 Ag</a>
+    <a href="#sec-photo">15 Photo</a>
+    <a href="#sec-clothes">16 Clothes</a>
     <a href="#sec-commute">17 Commute</a>
     <a href="#sec-climate">18 Climate</a>
-    <a href="#sec-space">19 Space Weather</a>
-    <a href="#sec-astro">20 Astronomy</a>
-    <a href="#sec-sky">21 Night Sky</a>
-    <a href="#sec-events">22 Sky Events</a>
-    <a href="#sec-seismic">23 Quakes</a>
+    <a href="#sec-space">19 Space</a>
+    <a href="#sec-astro">20 Astro</a>
+    <a href="#sec-sky">21 Sky</a>
+    <a href="#sec-events">22 Events</a>
+    <a href="#sec-seismic">23 Seismic</a>
     <a href="#sec-calendar">24 Calendar</a>
-    <a href="#sec-mooncal">25 Moon Month</a>
-    <a href="#sec-uv">26 UV</a>
+    <a href="#sec-mooncal">25 Mooncal</a>
+    <a href="#sec-uv">26 Uv</a>
     <a href="#sec-humidity">27 Humidity</a>
     <a href="#sec-pressure">28 Pressure</a>
     <a href="#sec-clouds">29 Clouds</a>
-    <a href="#sec-vis">30 Visibility</a>
-    <a href="#sec-storm">31 Storms</a>
+    <a href="#sec-vis">30 Vis</a>
+    <a href="#sec-storm">31 Storm</a>
     <a href="#sec-lightning">32 Lightning</a>
     <a href="#sec-snow">33 Snow</a>
     <a href="#sec-heat">34 Heat</a>
     <a href="#sec-cold">35 Cold</a>
     <a href="#sec-altimeter">36 Altimeter</a>
-    <a href="#sec-time">37 Solar Time</a>
+    <a href="#sec-time">37 Time</a>
     <a href="#sec-meteors">38 Meteors</a>
-    <a href="#sec-sat">39 Satellites</a>
-    <a href="#sec-lightpol">40 Light Pollution</a>
-    <a href="#sec-hike">41 Hiking</a>
+    <a href="#sec-sat">39 Sat</a>
+    <a href="#sec-lightpol">40 Lightpol</a>
+    <a href="#sec-hike">41 Hike</a>
     <a href="#sec-sports">42 Sports</a>
     <a href="#sec-school">43 School</a>
     <a href="#sec-pets">44 Pets</a>
     <a href="#sec-energy">45 Energy</a>
     <a href="#sec-roads">46 Roads</a>
     <a href="#sec-allergy">47 Allergy</a>
-    <a href="#sec-pack">48 Pack List</a>
+    <a href="#sec-pack">48 Pack</a>
     <a href="#sec-history">49 History</a>
-    <a href="#sec-fun">50 CN Status</a>
-    <a href="#sec-tools">51 Station</a>
+    <a href="#sec-fun">50 Fun</a>
+    <a href="#sec-aqi-detail">51 Aqi Detail</a>
+    <a href="#sec-pm25">52 Pm25</a>
+    <a href="#sec-ozone">53 Ozone</a>
+    <a href="#sec-dew">54 Dew</a>
+    <a href="#sec-feels">55 Feels</a>
+    <a href="#sec-gust">56 Gust</a>
+    <a href="#sec-dir">57 Dir</a>
+    <a href="#sec-baro-trend">58 Baro Trend</a>
+    <a href="#sec-sun">59 Sun</a>
+    <a href="#sec-moon-detail">60 Moon Detail</a>
+    <a href="#sec-twilight">61 Twilight</a>
+    <a href="#sec-sidereal">62 Sidereal</a>
+    <a href="#sec-kp-detail">63 Kp Detail</a>
+    <a href="#sec-aurora">64 Aurora</a>
+    <a href="#sec-iss">65 Iss</a>
+    <a href="#sec-meteor-detail">66 Meteor Detail</a>
+    <a href="#sec-constellation">67 Constellation</a>
+    <a href="#sec-light-tips">68 Light Tips</a>
+    <a href="#sec-fog">69 Fog</a>
+    <a href="#sec-frost-detail">70 Frost Detail</a>
+    <a href="#sec-ice">71 Ice</a>
+    <a href="#sec-flood">72 Flood</a>
+    <a href="#sec-drought">73 Drought</a>
+    <a href="#sec-pollen-tree">74 Pollen Tree</a>
+    <a href="#sec-pollen-grass">75 Pollen Grass</a>
+    <a href="#sec-pollen-weed">76 Pollen Weed</a>
+    <a href="#sec-mold">77 Mold</a>
+    <a href="#sec-asthma">78 Asthma</a>
+    <a href="#sec-migraine">79 Migraine</a>
+    <a href="#sec-skin">80 Skin</a>
+    <a href="#sec-run">81 Run</a>
+    <a href="#sec-bike">82 Bike</a>
+    <a href="#sec-golf">83 Golf</a>
+    <a href="#sec-camp">84 Camp</a>
+    <a href="#sec-bbq">85 Bbq</a>
+    <a href="#sec-laundry">86 Laundry</a>
+    <a href="#sec-garden">87 Garden</a>
+    <a href="#sec-drive-night">88 Drive Night</a>
+    <a href="#sec-school-bus">89 School Bus</a>
+    <a href="#sec-power-out">90 Power Out</a>
+    <a href="#sec-window">91 Window</a>
+    <a href="#sec-ac">92 Ac</a>
+    <a href="#sec-heat-home">93 Heat Home</a>
+    <a href="#sec-humidity-home">94 Humidity Home</a>
+    <a href="#sec-static">95 Static</a>
+    <a href="#sec-paint">96 Paint</a>
+    <a href="#sec-concrete">97 Concrete</a>
+    <a href="#sec-drone">98 Drone</a>
+    <a href="#sec-photo-night">99 Photo Night</a>
+    <a href="#sec-stargaze">100 Stargaze</a>
+    <a href="#sec-tools">101 Tools</a>
   </nav>
 
   <main>
@@ -699,6 +1003,14 @@
       <div class="card-title">🛰️ CN Radar <span class="badge">CN · TWN map data</span></div>
       <div class="radar-wrap" id="radarWrap" style="position:relative">
         <div id="radarMap" style="display:none;width:100%;height:100%"></div>
+        
+        <div class="btn-row" style="margin-bottom:10px">
+          <button type="button" class="btn btn-ghost" id="radarModePast" onclick="setRadarMode('past')">⏮ Past</button>
+          <button type="button" class="btn btn-primary" id="radarModeNow" onclick="setRadarMode('now')">⏺ Now</button>
+          <button type="button" class="btn btn-ghost" id="radarModeFuture" onclick="setRadarMode('future')">⏭ Future</button>
+        </div>
+        <canvas id="radarFutureCanvas" width="1200" height="675" style="display:none;width:100%;max-height:420px;background:#05070e;border-radius:8px"></canvas>
+
         <img id="twnRadarImg" alt="CN Radar (TWN data)" style="width:100%;height:100%;object-fit:contain;display:block;background:#05070e" />
         <div id="radarLoading" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(6,8,15,.75);color:var(--text-muted);font-size:.9rem;z-index:2;pointer-events:none">Loading TWN radar…</div>
       </div>
@@ -1213,14 +1525,514 @@
       <div class="quote-box">"The universe is under no obligation to make sense to you." — Neil deGrasse Tyson</div>
     </section>
 
-<section class="card" id="sec-tools">
+
+    <section class="card" id="sec-aqi-detail">
+      <div class="card-title">🫁 AQI Breakdown</div>
+      <div class="fun-banner" id="sec-aqi-detail_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-aqi-detail_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-aqi-detail_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-aqi-detail_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-pm25">
+      <div class="card-title">🌫️ PM2.5 Desk</div>
+      <div class="fun-banner" id="sec-pm25_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-pm25_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-pm25_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-pm25_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-ozone">
+      <div class="card-title">🧪 Ozone Desk</div>
+      <div class="fun-banner" id="sec-ozone_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-ozone_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-ozone_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-ozone_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-dew">
+      <div class="card-title">💧 Dew Point Deep</div>
+      <div class="fun-banner" id="sec-dew_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-dew_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-dew_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-dew_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-feels">
+      <div class="card-title">🌡️ Feels-Like Lab</div>
+      <div class="fun-banner" id="sec-feels_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-feels_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-feels_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-feels_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-gust">
+      <div class="card-title">💨 Gust Factor</div>
+      <div class="fun-banner" id="sec-gust_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-gust_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-gust_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-gust_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-dir">
+      <div class="card-title">🧭 Wind Direction</div>
+      <div class="fun-banner" id="sec-dir_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-dir_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-dir_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-dir_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-baro-trend">
+      <div class="card-title">📉 Pressure Trend</div>
+      <div class="fun-banner" id="sec-baro-trend_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-baro-trend_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-baro-trend_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-baro-trend_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-sun">
+      <div class="card-title">☀️ Sun Path</div>
+      <div class="fun-banner" id="sec-sun_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-sun_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-sun_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-sun_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-moon-detail">
+      <div class="card-title">🌙 Moon Detail</div>
+      <div class="fun-banner" id="sec-moon-detail_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-moon-detail_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-moon-detail_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-moon-detail_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-twilight">
+      <div class="card-title">🌆 Twilight Stages</div>
+      <div class="fun-banner" id="sec-twilight_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-twilight_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-twilight_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-twilight_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-sidereal">
+      <div class="card-title">⭐ Sidereal Clock</div>
+      <div class="fun-banner" id="sec-sidereal_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-sidereal_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-sidereal_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-sidereal_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-kp-detail">
+      <div class="card-title">🧲 Kp Detail</div>
+      <div class="fun-banner" id="sec-kp-detail_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-kp-detail_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-kp-detail_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-kp-detail_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-aurora">
+      <div class="card-title">🌌 Aurora Odds</div>
+      <div class="fun-banner" id="sec-aurora_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-aurora_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-aurora_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-aurora_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-iss">
+      <div class="card-title">🛰️ ISS Notes</div>
+      <div class="fun-banner" id="sec-iss_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-iss_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-iss_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-iss_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-meteor-detail">
+      <div class="card-title">☄️ Meteor Detail</div>
+      <div class="fun-banner" id="sec-meteor-detail_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-meteor-detail_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-meteor-detail_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-meteor-detail_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-constellation">
+      <div class="card-title">✨ Season Stars</div>
+      <div class="fun-banner" id="sec-constellation_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-constellation_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-constellation_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-constellation_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-light-tips">
+      <div class="card-title">💡 Dark-Sky Tips</div>
+      <div class="fun-banner" id="sec-light-tips_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-light-tips_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-light-tips_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-light-tips_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-fog">
+      <div class="card-title">🌁 Fog Desk</div>
+      <div class="fun-banner" id="sec-fog_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-fog_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-fog_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-fog_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-frost-detail">
+      <div class="card-title">❄️ Frost Detail</div>
+      <div class="fun-banner" id="sec-frost-detail_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-frost-detail_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-frost-detail_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-frost-detail_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-ice">
+      <div class="card-title">🧊 Ice Risk</div>
+      <div class="fun-banner" id="sec-ice_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-ice_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-ice_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-ice_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-flood">
+      <div class="card-title">🌊 Flood Lens</div>
+      <div class="fun-banner" id="sec-flood_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-flood_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-flood_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-flood_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-drought">
+      <div class="card-title">🏜️ Dry Spell</div>
+      <div class="fun-banner" id="sec-drought_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-drought_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-drought_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-drought_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-pollen-tree">
+      <div class="card-title">🌳 Tree Pollen</div>
+      <div class="fun-banner" id="sec-pollen-tree_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-pollen-tree_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-pollen-tree_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-pollen-tree_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-pollen-grass">
+      <div class="card-title">🌿 Grass Pollen</div>
+      <div class="fun-banner" id="sec-pollen-grass_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-pollen-grass_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-pollen-grass_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-pollen-grass_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-pollen-weed">
+      <div class="card-title">🌾 Weed Pollen</div>
+      <div class="fun-banner" id="sec-pollen-weed_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-pollen-weed_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-pollen-weed_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-pollen-weed_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-mold">
+      <div class="card-title">🦠 Mold Risk Proxy</div>
+      <div class="fun-banner" id="sec-mold_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-mold_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-mold_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-mold_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-asthma">
+      <div class="card-title">😮‍💨 Breathing Comfort</div>
+      <div class="fun-banner" id="sec-asthma_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-asthma_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-asthma_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-asthma_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-migraine">
+      <div class="card-title">🤕 Pressure Sensitivity</div>
+      <div class="fun-banner" id="sec-migraine_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-migraine_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-migraine_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-migraine_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-skin">
+      <div class="card-title">🧴 Skin / UV Care</div>
+      <div class="fun-banner" id="sec-skin_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-skin_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-skin_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-skin_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-run">
+      <div class="card-title">🏃 Running Index</div>
+      <div class="fun-banner" id="sec-run_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-run_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-run_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-run_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-bike">
+      <div class="card-title">🚴 Cycling Index</div>
+      <div class="fun-banner" id="sec-bike_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-bike_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-bike_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-bike_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-golf">
+      <div class="card-title">⛳ Golf Day</div>
+      <div class="fun-banner" id="sec-golf_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-golf_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-golf_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-golf_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-camp">
+      <div class="card-title">⛺ Camping Night</div>
+      <div class="fun-banner" id="sec-camp_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-camp_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-camp_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-camp_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-bbq">
+      <div class="card-title">🔥 BBQ Weather</div>
+      <div class="fun-banner" id="sec-bbq_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-bbq_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-bbq_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-bbq_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-laundry">
+      <div class="card-title">👕 Laundry Dry</div>
+      <div class="fun-banner" id="sec-laundry_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-laundry_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-laundry_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-laundry_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-garden">
+      <div class="card-title">🪴 Garden Watering</div>
+      <div class="fun-banner" id="sec-garden_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-garden_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-garden_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-garden_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-drive-night">
+      <div class="card-title">🌙 Night Drive</div>
+      <div class="fun-banner" id="sec-drive-night_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-drive-night_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-drive-night_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-drive-night_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-school-bus">
+      <div class="card-title">🚌 Bus Stop Wait</div>
+      <div class="fun-banner" id="sec-school-bus_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-school-bus_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-school-bus_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-school-bus_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-power-out">
+      <div class="card-title">🔌 Outage Comfort</div>
+      <div class="fun-banner" id="sec-power-out_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-power-out_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-power-out_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-power-out_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-window">
+      <div class="card-title">🪟 Open Window?</div>
+      <div class="fun-banner" id="sec-window_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-window_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-window_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-window_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-ac">
+      <div class="card-title">❄️ AC Need</div>
+      <div class="fun-banner" id="sec-ac_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-ac_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-ac_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-ac_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-heat-home">
+      <div class="card-title">🏠 Heat Need</div>
+      <div class="fun-banner" id="sec-heat-home_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-heat-home_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-heat-home_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-heat-home_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-humidity-home">
+      <div class="card-title">🏠 Indoor Humidity</div>
+      <div class="fun-banner" id="sec-humidity-home_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-humidity-home_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-humidity-home_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-humidity-home_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-static">
+      <div class="card-title">⚡ Static Electricity</div>
+      <div class="fun-banner" id="sec-static_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-static_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-static_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-static_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-paint">
+      <div class="card-title">🎨 Outdoor Paint</div>
+      <div class="fun-banner" id="sec-paint_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-paint_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-paint_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-paint_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-concrete">
+      <div class="card-title">🧱 Concrete Cure</div>
+      <div class="fun-banner" id="sec-concrete_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-concrete_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-concrete_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-concrete_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-drone">
+      <div class="card-title">🚁 Drone Fly</div>
+      <div class="fun-banner" id="sec-drone_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-drone_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-drone_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-drone_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-photo-night">
+      <div class="card-title">📷 Night Photo</div>
+      <div class="fun-banner" id="sec-photo-night_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-photo-night_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-photo-night_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-photo-night_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-stargaze">
+      <div class="card-title">🔭 Stargaze Score</div>
+      <div class="fun-banner" id="sec-stargaze_body">Updates with weather load.</div>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="mini-card"><div class="label">Status</div><div class="value" id="sec-stargaze_v1">—</div></div>
+        <div class="mini-card"><div class="label">Detail</div><div class="value" id="sec-stargaze_v2" style="font-size:1rem">—</div></div>
+        <div class="mini-card"><div class="label">Tip</div><div class="value" id="sec-stargaze_v3" style="font-size:.95rem">—</div></div>
+      </div>
+    </section>
+    <section class="card" id="sec-tools">
       <div class="card-title">🧰 Station Tools</div>
       
       <div class="fun-banner" style="margin-top:16px">
         <strong>Switch to Chevron Network (CN)</strong><br/>
         Share this page with friends who still open The Weather Network for radar — CN uses the same TWN radar feed plus thermal, astronomy, clothing, and 50 observatory desks in one file.</div>
       <div class="fun-banner" style="margin-top:14px">
-        <strong>CN Preference (for friends still on TWN)</strong><br/>
+        <strong>CN vs TWN: radar · hourly · daily · alerts · UV · maps — plus thermal, astronomy, AI, offline, no ads. TWN feature parity</strong><br/>
         We can’t change The Weather Network’s own app settings — but you can make <em>Chevron Network (CN)</em> your default weather page:
         <ol style="margin:8px 0 0 18px;font-size:.9rem;line-height:1.5">
           <li>Open this CN page → share/copy the link</li>
@@ -1369,7 +2181,24 @@
     return ft+" ft · "+m+" m";
   }
 
-  function wmoIcon(c){return(WMO[c]||["Unknown","🌀"])[1]}
+  
+  function wmoIcon(c, size) {
+    // Animated CSS weather "gif-like" icon — works offline, no emoji dependency
+    const s = size === "lg" ? "wx-lg" : (size === "sm" ? "wx-sm" : "");
+    const code = c|0;
+    let inner = "";
+    if (code === 0) inner = `<span class="wx ${s} wx-sun" title="Clear"></span>`;
+    else if (code === 1 || code === 2) inner = `<span class="wx ${s} wx-partly" title="Partly cloudy"><span class="wx-sun" style="width:50%;height:50%;position:absolute;top:0;right:0"></span><span class="wx-cloud"></span></span>`;
+    else if (code === 3) inner = `<span class="wx ${s}" title="Overcast"><span class="wx-cloud" style="top:30%"></span></span>`;
+    else if (code === 45 || code === 48) inner = `<span class="wx ${s}" title="Fog"><span class="wx-fog"></span></span>`;
+    else if (code >= 71 && code <= 77 || code === 85 || code === 86) inner = `<span class="wx ${s} wx-snow" title="Snow"><span class="wx-cloud"></span></span>`;
+    else if (code >= 95) inner = `<span class="wx ${s} wx-storm" title="Storm"><span class="wx-cloud"></span></span>`;
+    else if (code >= 51) inner = `<span class="wx ${s} wx-rain" title="Rain"><span class="wx-cloud"></span></span>`;
+    else inner = `<span class="wx ${s}" title="Cloud"><span class="wx-cloud" style="top:30%"></span></span>`;
+    return inner;
+  }
+  function wmoIconEmojiFallback(c){return(WMO[c]||["Unknown","·"])[1]}
+
   function wmoLabel(c){return(WMO[c]||["Unknown","🌀"])[0]}
   function formatHour(iso){if(!iso)return"—";const m=String(iso).match(/T(\d{2}):(\d{2})/);return m?m[1]+":"+m[2]:iso}
   function formatDayName(iso){
@@ -1503,6 +2332,25 @@
 
     const css =
       `linear-gradient(135deg, rgb(${top.join(",")}) 0%, rgb(${mid.join(",")}) 45%, rgb(${bot.join(",")}) 100%)`;
+    
+    // Apply full-theme CSS variables from sky
+    const rgb = (a) => `rgb(${a.join(",")})`;
+    const rgba = (a, al) => `rgba(${a[0]},${a[1]},${a[2]},${al})`;
+    document.documentElement.style.setProperty("--sky-top", rgb(top));
+    document.documentElement.style.setProperty("--sky-mid", rgb(mid));
+    document.documentElement.style.setProperty("--sky-bot", rgb(bot));
+    // accent shifts with sky: day=amber-red, storm=bright red, night=cool red
+    let accent = [255, 42, 42];
+    if (isStorm) accent = [255, 60, 40];
+    else if (elevation > 10) accent = [255, 90, 50];
+    else if (elevation < -12) accent = [200, 40, 80];
+    document.documentElement.style.setProperty("--sky-accent", rgb(accent));
+    document.documentElement.style.setProperty("--sky-glow", rgba(accent, 0.35));
+    document.documentElement.style.setProperty("--sky-card", rgba([Math.min(30, bot[0]+10), Math.min(35, bot[1]+12), Math.min(50, bot[2]+18)], 0.88));
+    document.documentElement.style.setProperty("--accent", rgb(accent));
+    document.documentElement.style.setProperty("--accent-glow", rgba(accent, 0.35));
+    document.documentElement.style.setProperty("--border-strong", rgb(accent));
+
     document.body.style.background = css;
     document.body.style.backgroundAttachment = "fixed";
   }
@@ -1890,7 +2738,7 @@ function moonPhase(date){
     const c=data.current,d=data.daily,code=c.weather_code;
     $("temp").textContent=convertTemp(c.temperature_2m);
     $("weatherDesc").textContent=wmoLabel(code);
-    $("weatherIcon").textContent=wmoIcon(code);
+    $("weatherIcon").innerHTML=wmoIcon(code,"lg");
     $("daySummary").textContent=buildSummary(d.temperature_2m_max[0],d.temperature_2m_min[0],code,c.wind_speed_10m);
     $("statWind").textContent=convertWind(c.wind_speed_10m)+" "+windUnitLabel();
     $("statHumidity").textContent=c.relative_humidity_2m+"%";
@@ -1941,7 +2789,7 @@ function moonPhase(date){
     $("windPressure").textContent=convertPres(c.surface_pressure);
     if(c.visibility!=null)$("windVis").textContent=convertDistKm(c.visibility/1000); else $("windVis").textContent="—";
 
-    renderHourly(data);renderDaily(data);renderHealthAndFire(c);renderExtraSections(data);try{updateSkyBackground()}catch(e){}
+    renderHourly(data);renderDaily(data);renderHealthAndFire(c);renderExtraSections(data);try{fillExtraDesks(data);saveOfflinePack()}catch(e){};try{updateSkyBackground()}catch(e){}
     if(d.moonrise)$("moonrise").textContent=formatHour(d.moonrise[0]);
     if(d.moonset)$("moonset").textContent=formatHour(d.moonset[0]);
   }
@@ -2068,7 +2916,7 @@ function moonPhase(date){
       const probe = new Image();
       probe.onload = () => {
         if (img) {
-          img.src = url;
+          img.src = url; try { pushRadarFrame(url); } catch(e) {}
           img.style.display = "block";
         }
         if (loading) loading.style.display = "none";
@@ -2673,6 +3521,7 @@ function moonPhase(date){
   }
 
   async function openSpaceCompass() {
+    ensureCompassOfflineOK();
     if (!isMobile()) {
       toast("Space Compass is mobile-only");
       return;
@@ -2698,6 +3547,532 @@ function moonPhase(date){
     try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) {}
   }
 
+
+  
+
+  // ========== ZERO-POWER / OFFLINE CORE ==========
+  // Works with: no network, empty APIs, cached only, compass math-only
+  const CN_CACHE_KEY = "chevron_offline_pack_v2";
+  let radarMode = "now"; // past | now | future
+  let rainViewerData = null;
+  let offlinePack = null;
+
+  function saveOfflinePack() {
+    try {
+      const pack = {
+        at: Date.now(),
+        city: currentCityName,
+        coords: currentCoords,
+        weather: rawWeather,
+        air: rawAir,
+        radarFrames: radarFrames.slice(-12).map(f => ({ url: f.url, t: f.t, label: f.label })),
+      };
+      localStorage.setItem(CN_CACHE_KEY, JSON.stringify(pack));
+      offlinePack = pack;
+    } catch (e) {
+      // quota — drop radar frames
+      try {
+        localStorage.setItem(CN_CACHE_KEY, JSON.stringify({
+          at: Date.now(), city: currentCityName, coords: currentCoords, weather: rawWeather, air: rawAir, radarFrames: []
+        }));
+      } catch (e2) {}
+    }
+  }
+
+  function loadOfflinePack() {
+    try {
+      offlinePack = JSON.parse(localStorage.getItem(CN_CACHE_KEY) || "null");
+      if (!offlinePack) return false;
+      if (offlinePack.weather) {
+        rawWeather = offlinePack.weather;
+        currentCityName = offlinePack.city || currentCityName;
+        if (offlinePack.coords) currentCoords = offlinePack.coords;
+        try { renderWeather(rawWeather); } catch (e) {}
+        try { updateSimpleHub(); } catch (e) {}
+        try { updateAstronomy(); } catch (e) {}
+      }
+      if (offlinePack.radarFrames && offlinePack.radarFrames.length) {
+        radarFrames.length = 0;
+        offlinePack.radarFrames.forEach(f => radarFrames.push(f));
+        const sl = document.getElementById("radarFrameSlider");
+        if (sl) { sl.max = Math.max(0, radarFrames.length - 1); sl.value = radarFrames.length - 1; }
+      }
+      toast("Offline pack loaded");
+      return true;
+    } catch (e) { return false; }
+  }
+
+  function isFullyOffline() {
+    return !navigator.onLine;
+  }
+
+  // Compass works with NOTHING online: only device orientation + cached lat/lon + local math
+  function ensureCompassOfflineOK() {
+    if (!currentCoords && offlinePack && offlinePack.coords) {
+      currentCoords = offlinePack.coords;
+    }
+    if (!currentCoords) {
+      // last resort: Thorold default so needle still has a sky model
+      currentCoords = { lat: 43.125, lon: -79.20 };
+      if (!currentCityName) currentCityName = "Cached / default";
+    }
+  }
+
+  // Patch openSpaceCompass to never require network
+  const _openSpaceCompass = typeof openSpaceCompass === "function" ? openSpaceCompass : null;
+
+  // ========== RADAR PAST / NOW / FUTURE ==========
+  function setRadarMode(m) {
+    radarMode = m;
+    ["past","now","future"].forEach(x => {
+      const b = document.getElementById("radarMode" + x.charAt(0).toUpperCase() + x.slice(1));
+      if (b) b.className = "btn " + (x === m ? "btn-primary" : "btn-ghost");
+    });
+    const img = document.getElementById("twnRadarImg");
+    const canvas = document.getElementById("radarFutureCanvas");
+    if (m === "future") {
+      if (img) img.style.display = "none";
+      if (canvas) { canvas.style.display = "block"; drawFutureRadar(); }
+    } else {
+      if (canvas) canvas.style.display = "none";
+      if (img) img.style.display = "block";
+      if (m === "past") {
+        if (radarFrames.length) showRadarFrame(0);
+        else if (!isFullyOffline()) loadRainViewerPast();
+        else toast("No past frames yet — open CN online a few minutes first");
+      } else {
+        if (currentCoords) loadTwnRadar(currentCoords.lat, currentCoords.lon);
+        else if (radarFrames.length) showRadarFrame(radarFrames.length - 1);
+      }
+    }
+  }
+
+  async function loadRainViewerPast() {
+    // Supplement past loop with public RainViewer timestamps (when TWN session buffer empty)
+    try {
+      const r = await fetch("https://api.rainviewer.com/public/weather-maps.json");
+      rainViewerData = await r.json();
+      const past = (rainViewerData.radar && rainViewerData.radar.past) || [];
+      const host = rainViewerData.host || "https://tilecache.rainviewer.com";
+      if (!past.length || !currentCoords) return;
+      // Use a fused-style center crop via static map isn't available; show last past as note
+      const lab = document.getElementById("radarFrameLabel");
+      if (lab) lab.textContent = `Past archive: ${past.length} RV frames available · use Play after TWN buffer fills`;
+      // Optionally paint future from nowcast
+    } catch (e) {}
+  }
+
+  function drawFutureRadar() {
+    const canvas = document.getElementById("radarFutureCanvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const W = canvas.width, H = canvas.height;
+    ctx.fillStyle = "#05070e";
+    ctx.fillRect(0, 0, W, H);
+    // grid
+    ctx.strokeStyle = "rgba(255,42,42,0.15)";
+    for (let x = 0; x < W; x += 60) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+    for (let y = 0; y < H; y += 60) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+    ctx.fillStyle = "#ff2a2a";
+    ctx.font = "bold 28px sans-serif";
+    ctx.fillText("FUTURE · model precip nowcast", 40, 50);
+    ctx.font = "18px sans-serif";
+    ctx.fillStyle = "#8b90a5";
+    ctx.fillText("Not TWN radar tiles — Open-Meteo minutely/hourly intensity drawn as rings", 40, 80);
+
+    const cx = W/2, cy = H/2;
+    // Build intensity from minutely or hourly
+    let levels = [];
+    if (minutelyData && minutelyData.precipitation) {
+      const now = Date.now();
+      for (let i = 0; i < minutelyData.time.length; i++) {
+        const t = new Date(minutelyData.time[i]).getTime();
+        if (t < now) continue;
+        if (t > now + 3 * 3600000) break;
+        levels.push({ mins: (t-now)/60000, p: minutelyData.precipitation[i] || 0 });
+      }
+    } else if (rawWeather && rawWeather.hourly) {
+      const now = Date.now();
+      const h = rawWeather.hourly;
+      for (let i = 0; i < Math.min(12, (h.time||[]).length); i++) {
+        const t = new Date(h.time[i]).getTime();
+        if (t < now - 1800000) continue;
+        const p = (h.precipitation && h.precipitation[i]) || 0;
+        levels.push({ mins: (t-now)/60000, p });
+      }
+    }
+
+    if (!levels.length) {
+      ctx.fillStyle = "#aaa";
+      ctx.fillText(isFullyOffline() ? "Offline — no forecast data in cache" : "Loading model…", 40, 140);
+      // still draw empty rings
+      levels = [{mins:0,p:0},{mins:30,p:0},{mins:60,p:0}];
+    }
+
+    levels.slice(0, 8).forEach((L, idx) => {
+      const r = 40 + idx * 45 + Math.min(80, L.p * 40);
+      const alpha = Math.min(0.85, 0.15 + L.p * 0.5);
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = L.p > 1 ? `rgba(64,196,255,${alpha})` : L.p > 0.2 ? `rgba(0,230,118,${alpha})` : `rgba(255,255,255,0.12)`;
+      ctx.lineWidth = 4 + Math.min(12, L.p * 6);
+      ctx.stroke();
+      ctx.fillStyle = "#ccc";
+      ctx.font = "14px monospace";
+      ctx.fillText(`+${Math.round(L.mins)}m  ${L.p.toFixed(2)} mm`, cx + r + 8, cy - r * 0.2 + idx * 2);
+    });
+
+    // center you
+    ctx.beginPath();
+    ctx.arc(cx, cy, 8, 0, Math.PI * 2);
+    ctx.fillStyle = "#ff2a2a";
+    ctx.fill();
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 14px sans-serif";
+    ctx.fillText("YOU", cx - 14, cy + 28);
+  }
+
+  // Fill extra micro-desks from weather
+  function fillExtraDesks(data) {
+    if (!data || !data.current) return;
+    const c = data.current, d = data.daily || {};
+    const t = c.temperature_2m, rh = c.relative_humidity_2m, wind = c.wind_speed_10m || 0;
+    const code = c.weather_code, uv = c.uv_index ?? d.uv_index_max?.[0] ?? 0;
+    const set3 = (id, a, b, tip) => {
+      const b1 = document.getElementById(id + "_body");
+      const v1 = document.getElementById(id + "_v1");
+      const v2 = document.getElementById(id + "_v2");
+      const v3 = document.getElementById(id + "_v3");
+      if (b1) b1.textContent = a + " — " + b;
+      if (v1) v1.textContent = a;
+      if (v2) v2.textContent = b;
+      if (v3) v3.textContent = tip;
+    };
+    set3("sec-feels", convertTemp(c.apparent_temperature), "Feels-like", "Use for outdoor time");
+    set3("sec-dew", convertTemp(c.dew_point_2m), "Dew point", rh > 70 ? "Muggy" : "OK");
+    set3("sec-gust", convertWind(c.wind_gusts_10m || wind) + " " + windUnitLabel(), "Gusts", wind > 40 ? "Secure loose items" : "Calm enough");
+    set3("sec-dir", (c.wind_direction_10m ?? "—") + "°", "From direction", "Logo follows wind");
+    set3("sec-fog", (code === 45 || code === 48) ? "Foggy" : "Clear", "Visibility lens", "Drive careful if fog");
+    set3("sec-frost-detail", (d.temperature_2m_min?.[0] ?? 99) <= 0 ? "Frost risk" : "No frost", "Overnight min", "Cover plants if needed");
+    set3("sec-ice", (d.temperature_2m_min?.[0] ?? 99) <= 0 && code >= 50 ? "Ice possible" : "Low", "Roads", "Slow down if wet+cold");
+    set3("sec-run", t > 5 && t < 28 && wind < 40 ? "Good" : "Meh", "Run index", "Hydrate");
+    set3("sec-bike", wind < 35 && (code < 80) ? "OK" : "Caution", "Cycling", "Lights if dark");
+    set3("sec-bbq", t > 12 && code < 70 ? "Yes" : "Maybe indoors", "BBQ", "Watch wind");
+    set3("sec-laundry", rh < 70 && code < 50 ? "Dry day" : "Slow dry", "Laundry", "Use dryer if wet");
+    set3("sec-window", t > 16 && t < 26 && code < 60 ? "Open" : "Closed", "Windows", "Security still matters");
+    set3("sec-ac", t > 26 ? "Likely" : "Off", "Cooling", "Save energy if mild");
+    set3("sec-heat-home", t < 16 ? "Likely" : "Off", "Heating", "Layer first");
+    set3("sec-skin", uv >= 5 ? "SPF on" : "Low UV", "Skin", "Reapply outdoors");
+    set3("sec-stargaze", (c.cloud_cover ?? 50) < 40 ? "Good" : "Cloudy", "Stars", "Check moon desk");
+    set3("sec-drone", wind < 25 && code < 70 ? "Fly OK" : "Don't fly", "Drone", "Follow local laws");
+    set3("sec-camp", t > 5 && code < 80 ? "OK" : "Rough", "Camp", "Check frost");
+    set3("sec-drive-night", (c.visibility ?? 99999) > 3000 ? "OK" : "Poor vis", "Night drive", "Headlights");
+    set3("sec-static", rh < 30 ? "High static" : "Low", "Static", "Humidify indoors");
+  }
+
+  // ========== UI MODE ==========
+  let uiMode = localStorage.getItem("chevron_ui") || "pro";
+  function setUiMode(m) {
+    uiMode = m;
+    localStorage.setItem("chevron_ui", m);
+    document.body.classList.toggle("simple-mode", m === "simple");
+    const sb = document.getElementById("modeSimpleBtn");
+    const pb = document.getElementById("modeProBtn");
+    if (sb) sb.className = "btn " + (m === "simple" ? "btn-primary" : "btn-ghost");
+    if (pb) pb.className = "btn " + (m === "pro" ? "btn-primary" : "btn-ghost");
+    const h = document.getElementById("modeHint");
+    if (h) h.textContent = m === "simple" ? "Simple = big weather + radar + Ask CN" : "Pro = all desks unlocked";
+  }
+
+  // ========== TWN RADAR FRAME BUFFER (past → now) ==========
+  // Saves each successful live fuse_image fetch so Play can scrub history
+  // collected during this session (honest approach to TWN public tiles).
+  const RADAR_MAX_FRAMES = 24;
+
+  function pushRadarFrame(url) {
+    if (!url) return;
+    const now = new Date();
+    const label = now.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+    // avoid dup consecutive
+    if (radarFrames.length && radarFrames[radarFrames.length - 1].url.split("&_")[0] === url.split("&_")[0]) return;
+    radarFrames.push({ url, t: now.getTime(), label });
+    while (radarFrames.length > RADAR_MAX_FRAMES) radarFrames.shift();
+    const sl = document.getElementById("radarFrameSlider");
+    if (sl) {
+      sl.max = Math.max(0, radarFrames.length - 1);
+      sl.value = radarFrames.length - 1;
+    }
+    const lab = document.getElementById("radarFrameLabel");
+    if (lab) lab.textContent = radarFrames.length <= 1 ? "Live" : `${radarFrames.length} frames · ${label}`;
+  }
+
+  function showRadarFrame(i) {
+    if (!radarFrames.length) return;
+    i = Math.max(0, Math.min(radarFrames.length - 1, i));
+    const fr = radarFrames[i];
+    const img = document.getElementById("twnRadarImg");
+    if (img && fr) img.src = fr.url;
+    const lab = document.getElementById("radarFrameLabel");
+    if (lab) lab.textContent = (i === radarFrames.length - 1 ? "Live · " : "Past · ") + fr.label;
+  }
+
+  let radarPlayTimer = null;
+  function playRadarFrames() {
+    if (radarPlayTimer) {
+      clearInterval(radarPlayTimer);
+      radarPlayTimer = null;
+      return;
+    }
+    if (radarFrames.length < 2) {
+      toast("Need 2+ saved frames — leave CN open a few minutes");
+      return;
+    }
+    let i = 0;
+    const sl = document.getElementById("radarFrameSlider");
+    radarPlayTimer = setInterval(() => {
+      showRadarFrame(i);
+      if (sl) sl.value = i;
+      i++;
+      if (i >= radarFrames.length) {
+        clearInterval(radarPlayTimer);
+        radarPlayTimer = null;
+      }
+    }, 450);
+  }
+
+  // Hook into loadTwnRadar success — patch by wrapping after definition later via monkey in load
+  const _origLoadTwnRadar = typeof loadTwnRadar === "function" ? loadTwnRadar : null;
+
+  // ========== STORM WATCH (short-term) ==========
+  // Uses Open-Meteo minutely_15 + current codes. Best free estimate ~15 min steps.
+  let minutelyData = null;
+  let stormWatchTimer = null;
+
+  async function fetchMinutely(lat, lon) {
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&minutely_15=precipitation,weather_code&forecast_days=1&timezone=auto`;
+      const r = await fetch(url);
+      if (!r.ok) return;
+      const j = await r.json();
+      minutelyData = j.minutely_15 || null;
+      evaluateStormWatch();
+    } catch (e) {}
+  }
+
+  function evaluateStormWatch() {
+    const banner = document.getElementById("stormBanner");
+    if (!banner) return;
+    let msg = null;
+    const c = rawWeather && rawWeather.current;
+    if (c && (c.weather_code >= 95 || c.weather_code === 96 || c.weather_code === 99)) {
+      msg = "⚠️ SEVERE: Thunderstorm conditions in the model NOW — seek sturdy shelter. Check radar.";
+    }
+    if (!msg && minutelyData && minutelyData.time && minutelyData.precipitation) {
+      const times = minutelyData.time;
+      const precip = minutelyData.precipitation;
+      const codes = minutelyData.weather_code || [];
+      const now = Date.now();
+      for (let i = 0; i < times.length; i++) {
+        const t = new Date(times[i]).getTime();
+        const mins = (t - now) / 60000;
+        if (mins < -5 || mins > 45) continue;
+        const p = precip[i] || 0;
+        const code = codes[i] || 0;
+        const stormy = code >= 95 || code === 96 || code === 99;
+        const heavy = p >= 1.5;
+        if (stormy && mins >= 0 && mins <= 30) {
+          msg = `⚠️ Storm signal in ~${Math.max(5, Math.round(mins))} min (model). Open radar and stay weather-aware.`;
+          break;
+        }
+        if (heavy && mins >= 0 && mins <= 30) {
+          msg = `🌧️ Heavy precip possible in ~${Math.max(5, Math.round(mins))} min. Check radar.`;
+          break;
+        }
+      }
+    }
+    // Hourly near-term backup
+    if (!msg && rawWeather && rawWeather.hourly) {
+      const h = rawWeather.hourly;
+      const now = Date.now();
+      for (let i = 0; i < Math.min(4, (h.time || []).length); i++) {
+        const t = new Date(h.time[i]).getTime();
+        if (t < now - 20 * 60000) continue;
+        const code = h.weather_code && h.weather_code[i];
+        if (code >= 95) {
+          const mins = Math.round((t - now) / 60000);
+          if (mins <= 90) {
+            msg = `⚠️ Thunderstorm in hourly model (~${Math.max(0, mins)} min window). Not a guarantee — verify on radar.`;
+            break;
+          }
+        }
+      }
+    }
+    if (msg) {
+      banner.textContent = msg;
+      banner.classList.add("show");
+    } else {
+      banner.classList.remove("show");
+      banner.textContent = "";
+    }
+  }
+
+  // ========== CN AI (local — no cloud LLM needed) ==========
+  function aiReply(html) {
+    const log = document.getElementById("aiLog");
+    if (!log) return;
+    log.classList.add("open");
+    const div = document.createElement("div");
+    div.className = "ai-msg ai-bot";
+    div.innerHTML = html;
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+  }
+  function aiUser(text) {
+    const log = document.getElementById("aiLog");
+    if (!log) return;
+    log.classList.add("open");
+    const div = document.createElement("div");
+    div.className = "ai-msg ai-user";
+    div.textContent = text;
+    log.appendChild(div);
+  }
+
+  const SECTION_MAP = [
+    [/radar|map/i, "sec-radar", "Radar"],
+    [/thermal|soil|ground temp|water temp/i, "sec-thermal", "Thermal"],
+    [/cloth|wear|outfit|dress/i, "sec-clothes", "What to Wear"],
+    [/hour|next 24|timeline/i, "sec-hourly", "Next 24h"],
+    [/week|7.?day|daily|forecast/i, "sec-daily", "Week"],
+    [/rain|precip/i, "sec-precip", "Rain Lab"],
+    [/wind/i, "sec-wind", "Wind"],
+    [/air quality|pollen|aqi/i, "sec-aq", "Air Quality"],
+    [/fire/i, "sec-fire", "Fire Risk"],
+    [/severe|tornado|storm desk/i, "sec-severe", "Severe"],
+    [/aviation|flight|ceiling/i, "sec-aviation", "Aviation"],
+    [/marine|boat|lake/i, "sec-marine", "Marine"],
+    [/astro|planet|moon|space sky/i, "sec-astro", "Astronomy"],
+    [/night sky|bortle/i, "sec-sky", "Night Sky"],
+    [/quake|seismic|earthquake/i, "sec-seismic", "Quakes"],
+    [/calendar/i, "sec-calendar", "Calendar"],
+    [/uv|sunburn/i, "sec-uv", "UV"],
+    [/snow/i, "sec-snow", "Snow"],
+    [/hike/i, "sec-hike", "Hiking"],
+    [/pet/i, "sec-pets", "Pets"],
+    [/simple|home|now|start/i, "sec-current", "Now"],
+  ];
+
+  function weatherBlurb() {
+    if (!rawWeather || !rawWeather.current) return "Weather is still loading — try again in a second.";
+    const c = rawWeather.current;
+    const d = rawWeather.daily || {};
+    const t = convertTemp(c.temperature_2m);
+    const feel = convertTemp(c.apparent_temperature);
+    const wind = convertWind(c.wind_speed_10m) + " " + windUnitLabel();
+    const label = typeof wmoLabel === "function" ? wmoLabel(c.weather_code) : "—";
+    const max = d.temperature_2m_max ? convertTemp(d.temperature_2m_max[0]) : "—";
+    const min = d.temperature_2m_min ? convertTemp(d.temperature_2m_min[0]) : "—";
+    const pop = d.precipitation_probability_max ? d.precipitation_probability_max[0] : "—";
+    const place = currentCityName || "your area";
+    return `In <strong>${place}</strong> it's <strong>${t}</strong> (feels ${feel}), <strong>${label}</strong>, wind ${wind}. Today high ${max} / low ${min}, precip chance up to ${pop}%.`;
+  }
+
+
+  function askCN(q) {
+    q = (q || "").trim();
+    if (!q) {
+      aiReply("Type something — try <em>weather</em>, <em>radar</em>, or <em>what to wear</em>.");
+      return;
+    }
+    try {
+      aiUser(q);
+      const ql = q.toLowerCase().replace(/[’']/g, "'");
+
+      // Ensure data if possible
+      if (!rawWeather && offlinePack && offlinePack.weather) {
+        rawWeather = offlinePack.weather;
+        currentCityName = offlinePack.city || currentCityName;
+      }
+
+      // Direct section names
+      for (const [re, id, name] of SECTION_MAP) {
+        if (re.test(ql) && /(open|show|go|take|jump|section|where)/i.test(ql)) {
+          setUiMode("pro");
+          goSection(id);
+          aiReply("Opening <strong>" + name + "</strong>.");
+          return;
+        }
+      }
+      if (/\bradar\b|\bmap\b/i.test(ql)) {
+        goSection("sec-radar");
+        aiReply("Radar is open. Use <strong>Past / Now / Future</strong> above the map.");
+        return;
+      }
+      if (/thermal|soil|ground temp/i.test(ql)) {
+        goSection("sec-thermal");
+        aiReply("Thermal profile opened.");
+        return;
+      }
+      if (/wear|cloth|outfit|jacket|coat/i.test(ql)) {
+        goSection("sec-clothes");
+        const h = document.getElementById("clothesHeadline");
+        aiReply(h && h.textContent ? ("Wear: <strong>" + h.textContent + "</strong>") : "What to Wear is open.");
+        return;
+      }
+      if (/storm|severe|lightning|thunder|warning/i.test(ql)) {
+        evaluateStormWatch();
+        const b = document.getElementById("stormBanner");
+        goSection("sec-radar");
+        aiReply(b && b.classList.contains("show") ? b.textContent : "No short-term storm flag right now. Radar opened — still look yourself.");
+        return;
+      }
+      if (/rain|umbrella|precip/i.test(ql)) {
+        const d = rawWeather && rawWeather.daily;
+        const pop = d && d.precipitation_probability_max ? d.precipitation_probability_max[0] : "—";
+        const sum = d && d.precipitation_sum ? d.precipitation_sum[0] : "—";
+        aiReply("Precip chance up to <strong>" + pop + "%</strong>, model total ~<strong>" + sum + " mm</strong>. " + weatherBlurb());
+        return;
+      }
+      if (/snow|flurr/i.test(ql)) {
+        aiReply(weatherBlurb() + " Check the Snow desk for more.");
+        goSection("sec-snow");
+        return;
+      }
+      if (/compass|night sky point|point me/i.test(ql)) {
+        if (typeof openSpaceCompass === "function") openSpaceCompass();
+        aiReply("Space Compass — mobile night mode. Allow motion permission if asked.");
+        return;
+      }
+      if (/help|what can|commands/i.test(ql)) {
+        aiReply("Try: <em>weather</em> · <em>radar</em> · <em>what to wear</em> · <em>storm?</em> · <em>rain?</em> · <em>open thermal</em> · <em>compass</em>");
+        return;
+      }
+      // default: weather summary for almost anything
+      aiReply(weatherBlurb());
+    } catch (err) {
+      aiReply("CN AI hit a glitch, but you're still good — use the section buttons or radar.");
+      console && console.warn(err);
+    }
+  }
+
+
+  function updateSimpleHub() {
+    if (!rawWeather?.current) return;
+    const c = rawWeather.current;
+    const el = (id) => document.getElementById(id);
+    if (el("simpleTemp")) el("simpleTemp").textContent = convertTemp(c.temperature_2m);
+    if (el("simplePlace")) el("simplePlace").textContent = currentCityName || "—";
+    if (el("simpleFeel")) {
+      el("simpleFeel").textContent =
+        (typeof wmoLabel === "function" ? wmoLabel(c.weather_code) : "") +
+        " · feels " + convertTemp(c.apparent_temperature);
+    }
+    if (el("simpleExtra")) {
+      el("simpleExtra").textContent =
+        "Wind " + convertWind(c.wind_speed_10m) + " " + windUnitLabel() +
+        " · Humidity " + (c.relative_humidity_2m ?? "—") + "%";
+    }
+  }
 
   function goSection(id) {
     const el = document.getElementById(id);
@@ -2739,7 +4114,7 @@ function moonPhase(date){
   }
 
   window.addEventListener("load",()=>{
-    try { applyPerfMode(); updateNightMobileFlag(); setInterval(updateNightMobileFlag, 60000); } catch(e) {}
+    try { applyPerfMode(); updateNightMobileFlag(); setUiMode(uiMode); try{loadOfflinePack()}catch(e){} setInterval(updateNightMobileFlag, 60000); } catch(e) {}
     document.querySelectorAll(".section-nav a").forEach(a=>{
       a.addEventListener("click", e=>{
         const href=a.getAttribute("href");
@@ -2780,7 +4155,7 @@ function moonPhase(date){
 
     updateNetStatus();
     window.addEventListener("online",()=>{updateNetStatus();refreshAll()});
-    window.addEventListener("offline",updateNetStatus);
+    window.addEventListener("offline",()=>{updateNetStatus();loadOfflinePack();toast("Offline mode — using CN cache")});
     document.querySelectorAll(".unit-toggle button").forEach(b=>b.classList.toggle("active",b.dataset.unit===currentUnit));
     setInterval(tickClock,1000);tickClock();initStars();renderSpaceEvents();try{renderCalendar();renderMoonCal()}catch(e){}
     setInterval(renderSpaceEvents,60000);setInterval(updateAstronomy,30000);setInterval(function(){try{updateSkyBackground()}catch(e){}},60000);
@@ -2812,6 +4187,18 @@ function moonPhase(date){
       <button class="btn btn-primary" type="button" onclick="toggleCompassTTS()">🔊 TTS On/Off</button>
       <button class="btn btn-ghost" type="button" onclick="speakCompassNow()">Speak</button>
       <button class="btn btn-ghost" type="button" onclick="closeSpaceCompass()">Close</button>
+    </div>
+  </div>
+
+
+  <div id="aiDock">
+    <div id="aiDockInner">
+      <div id="aiLog" aria-live="polite"></div>
+      <div id="aiRow">
+        <input id="aiInput" type="text" placeholder="Ask CN… e.g. weather, open radar, will it rain?" autocomplete="off"
+               onkeydown="if(event.key==='Enter'){askCN(this.value);this.value=''}" />
+        <button type="button" class="btn btn-primary" onclick="(function(){const i=document.getElementById('aiInput');askCN(i.value);i.value=''})()">Ask</button>
+      </div>
     </div>
   </div>
 
